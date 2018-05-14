@@ -11,10 +11,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "bulma": "^0.7.1",
+    "animate.css": "^3.6.1",
     "font-awesome": "^4.7.0",
-    "normalize.css": "^8.0.0",
+    "bulma": "^0.7.1",
     "lodash": "^4.17.10",
+    "normalize.css": "^8.0.0",
     "vue": "^2.5.2",
     "vue-resource": "^1.5.0",
     "vue-router": "^3.0.1",
