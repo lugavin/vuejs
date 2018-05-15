@@ -11,15 +11,16 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "animate.css": "^3.6.1",
     "font-awesome": "^4.7.0",
+    "animate.css": "^3.6.1",
     "bulma": "^0.7.1",
     "lodash": "^4.17.10",
-    "normalize.css": "^8.0.0",
+    "axios": "^0.18.0",
     "vue": "^2.5.2",
-    "vue-resource": "^1.5.0",
+    "vuex": "^3.0.1",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vue-axios": "^2.1.1",
+    "vue-nprogress": "^0.1.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

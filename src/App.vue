@@ -1,21 +1,25 @@
 <template>
   <div id="app">
     <navbar></navbar>
-    <app-main>
-      <router-view></router-view>
-    </app-main>
+    <app-main></app-main>
+    <footer-bar></footer-bar>
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/layout/Navbar';
-import AppMain from '@/components/layout/AppMain';
+import { Navbar, AppMain, FooterBar } from './components/layout';
 
 export default {
   name: 'App',
   components: {
     Navbar,
-    AppMain
+    AppMain,
+    FooterBar
   }
 };
 </script>
+
+<style>
+@import 'font-awesome/css/font-awesome.css';
+@import 'bulma/css/bulma.css';
+</style>

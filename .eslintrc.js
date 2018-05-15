@@ -45,6 +45,10 @@ module.exports = {
       optionalDependencies: ['test/unit/index.js']
     }],
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // This rule enforces consistent use of trailing commas in object and array literals.
+    "comma-dangle": ["error", "never"],
+    // This rule enforces consistent line endings independent of operating system.
+     "linebreak-style": 0
   }
 }
