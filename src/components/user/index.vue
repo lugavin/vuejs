@@ -49,6 +49,10 @@
 </template>
 
 <script>
+import axios from 'axios';
+
+axios.get('/rest/cms/users/101').then(response => console.log(response));
+
 export default {
   data: () => ({
     users: [
