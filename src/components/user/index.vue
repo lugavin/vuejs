@@ -49,9 +49,23 @@
 </template>
 
 <script>
-import axios from 'axios';
+import 'whatwg-fetch';
+import qs from 'querystring';
 
-axios.get('/rest/cms/users/101').then(response => console.log(response));
+const DATA = {
+  username: 'admin',
+  password: '111111'
+};
+
+fetch('/rest/sso/account/login/1', {
+  method: 'POST',
+  body: qs.stringify(DATA), // JSON.stringify(DATA)
+  headers: new Headers({
+    'Content-Type': 'application/x-www-form-urlencoded' // 'application/json'
+  })
+})
+  .then(response => response.json())
+  .then(data => console.info(data));
 
 export default {
   data: () => ({
@@ -64,5 +78,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
