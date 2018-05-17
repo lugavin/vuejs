@@ -16,6 +16,7 @@ export default {};
 .app-main {
   margin-top: 52px;
 }
+
 .app-content {
   padding: 20px 0;
 }

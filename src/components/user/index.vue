@@ -1,51 +1,51 @@
 <template>
+  <div>
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="#">Components</a></li>
+        <li class="is-active"><a href="#" aria-current="page">User</a></li>
+      </ul>
+    </nav>
     <div>
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-            <ul>
-                <li><a href="#">Components</a></li>
-                <li class="is-active"><a href="#" aria-current="page">User</a></li>
-            </ul>
-        </nav>
-        <div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>id</th>
-                        <th>name</th>
-                        <th>pass</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item, index) in users" :key="item.id">
-                        <td>{{index+1}}</td>
-                        <td>{{item.id}}</td>
-                        <td>{{item.name}}</td>
-                        <td>{{item.pass}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <nav class="pagination is-small" role="navigation" aria-label="pagination">
-                <ul class="pagination-list">
-                    <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-                    <li><span class="pagination-ellipsis">&hellip;</span></li>
-                    <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-                    <li>
-                        <a class="pagination-link is-current"
-                           aria-label="Page 46"
-                           aria-current="page">
-                            46
-                        </a>
-                    </li>
-                    <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-                    <li><span class="pagination-ellipsis">&hellip;</span></li>
-                    <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
-                </ul>
-            </nav>
-        </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>No</th>
+          <th>id</th>
+          <th>name</th>
+          <th>pass</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in users" :key="item.id">
+          <td>{{index+1}}</td>
+          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.pass}}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+    <div>
+      <nav class="pagination is-small" role="navigation" aria-label="pagination">
+        <ul class="pagination-list">
+          <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+          <li><span class="pagination-ellipsis">&hellip;</span></li>
+          <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+          <li>
+            <a class="pagination-link is-current"
+               aria-label="Page 46"
+               aria-current="page">
+              46
+            </a>
+          </li>
+          <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+          <li><span class="pagination-ellipsis">&hellip;</span></li>
+          <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -57,6 +57,11 @@ const DATA = {
   password: '111111'
 };
 
+/**
+ * 使用fetch需要注意的问题:
+ * (1)Fetch请求默认不带Cookie, 需要设置 fetch(url, {credentials: 'include'})
+ * (2)服务器返回 400, 500 错误码时并不会 reject, 只有网络错误这些导致请求不能完成时, fetch 才会被 reject
+ */
 fetch('/rest/sso/account/login/1', {
   method: 'POST',
   body: qs.stringify(DATA), // JSON.stringify(DATA)
@@ -64,6 +69,14 @@ fetch('/rest/sso/account/login/1', {
     'Content-Type': 'application/x-www-form-urlencoded' // 'application/json'
   })
 })
+  .then((response) => {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    }
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  })
   .then(response => response.json())
   .then(data => console.info(data));
 

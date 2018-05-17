@@ -6,7 +6,7 @@ module.exports = {
     parser: 'babel-eslint'
   },
   env: {
-    browser: true,
+    browser: true
   },
   // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
   // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
@@ -47,10 +47,10 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow console during development
-    "no-console": process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // This rule enforces consistent use of trailing commas in object and array literals.
-    "comma-dangle": ["error", "never"],
+    'comma-dangle': ['error', 'never'],
     // This rule enforces consistent line endings independent of operating system.
-    "linebreak-style": 0
+    'linebreak-style': 0
   }
-}
+};

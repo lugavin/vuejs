@@ -1,42 +1,53 @@
 <template>
-    <nav class="navbar has-shadow is-fixed-top">
-        <div class="container">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="https://bulma.io">
-                    <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
-                </a>
-                <div class="navbar-burger burger" data-target="navMenu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-            <div id="navMenu" class="navbar-menu">
-                <div class="navbar-start">
-                    <a class="navbar-item" href="https://bulma.io/">Home</a>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link" href="/documentation/overview/start/">Docs</a>
-                        <div class="navbar-dropdown is-boxed">
-                            <a class="navbar-item" href="/documentation/overview/start/">
-                                Overview
-                            </a>
-                            <a class="navbar-item" href="https://bulma.io/documentation/modifiers/syntax/">
-                                Modifiers
-                            </a>
-                            <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">Columns</a>
-                            <a class="navbar-item" href="https://bulma.io/documentation/layout/container/">Layout</a>
-                            <a class="navbar-item" href="https://bulma.io/documentation/form/general/">Form</a>
-                            <hr class="navbar-divider">
-                            <a class="navbar-item" href="https://bulma.io/documentation/elements/box/">Elements</a>
-                            <a class="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">Components</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <nav class="navbar has-shadow is-fixed-top">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+          <i class="fa fa-html5 fa-2x"></i>&nbsp;VUE Template
+        </a>
+        <div class="navbar-burger" @click="isActive=!isActive" :class="{'is-active': isActive}">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
-    </nav>
+      <div class="navbar-menu" :class="{'is-active': isActive}">
+        <div class="navbar-end">
+          <a class="navbar-item is-active" href="#">
+            <i class="fa fa-home"></i>&nbsp;首页
+          </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="#">
+              <i class="fa fa-user"></i>&nbsp;帐号
+            </a>
+            <div class="navbar-dropdown is-boxed">
+              <a class="navbar-item" href="#"><i class="fa fa-wrench"></i>&nbsp;设置</a>
+              <a class="navbar-item" href="#"><i class="fa fa-lock"></i>&nbsp;密码</a>
+              <a class="navbar-item" href="#"><i class="fa fa-plus-circle"></i>&nbsp;注册</a>
+              <a class="navbar-item" href="#"><i class="fa fa-sign-in"></i>&nbsp;登录</a>
+              <a class="navbar-item" href="#"><i class="fa fa-sign-out"></i>&nbsp;退出</a>
+            </div>
+          </div>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="#">
+              <i class="fa fa-flag"></i>&nbsp;语言
+            </a>
+            <div class="navbar-dropdown is-boxed">
+              <a class="navbar-item" href="#">简体中文</a>
+              <a class="navbar-item" href="#">繁体中文</a>
+              <a class="navbar-item" href="#">English</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
-export default {};
+export default {
+  data: () => ({
+    isActive: false
+  })
+};
 </script>
