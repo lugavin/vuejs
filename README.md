@@ -2,6 +2,7 @@
 
 > Vue Single Page Application
 
+<!--
 ## Install
 ``` bash
 # vue-cli
@@ -9,13 +10,8 @@ npm install vue-cli -g
 
 # init project
 vue init webpack vue
-
-# install cnpm 
-alias cnpm="npm --registry=https://registry.npm.taobao.org \
---cache=$HOME/.npm/.cache/cnpm \
---disturl=https://npm.taobao.org/dist \
---userconfig=$HOME/.cnpmrc"
 ```
+-->
 
 ## Build Setup
 

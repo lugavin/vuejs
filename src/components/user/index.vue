@@ -49,44 +49,15 @@
 </template>
 
 <script>
-import 'whatwg-fetch';
-import qs from 'querystring';
-
-const DATA = {
-  username: 'admin',
-  password: '111111'
-};
-
-/**
- * 使用fetch需要注意的问题:
- * (1)Fetch请求默认不带Cookie, 需要设置 fetch(url, {credentials: 'include'})
- * (2)服务器返回 400, 500 错误码时并不会 reject, 只有网络错误这些导致请求不能完成时, fetch 才会被 reject
- */
-fetch('/rest/sso/account/login/1', {
-  method: 'POST',
-  body: qs.stringify(DATA), // JSON.stringify(DATA)
-  headers: new Headers({
-    'Content-Type': 'application/x-www-form-urlencoded' // 'application/json'
-  })
-})
-  .then((response) => {
-    if (response.status >= 200 && response.status < 300) {
-      return response;
-    }
-    const error = new Error(response.statusText);
-    error.response = response;
-    throw error;
-  })
-  .then(response => response.json())
-  .then(data => console.info(data));
-
 export default {
-  data: () => ({
-    users: [
-      { id: 1001, name: 'Alan', pass: '******' },
-      { id: 1002, name: 'Ann', pass: '******' }
-    ]
-  })
+  data() {
+    return {
+      users: [
+        { id: 1001, name: 'Alan', pass: '******' },
+        { id: 1002, name: 'Ann', pass: '******' }
+      ]
+    };
+  }
 };
 </script>
 

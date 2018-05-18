@@ -1,7 +1,9 @@
 <template>
-  <main class="app-main">
-    <div class="container app-content">
-      <transition mode="out-in" enter-active-class="fadeIn" leave-active-class="fadeOut">
+  <main>
+    <div class="container">
+      <transition mode="out-in"
+                  enter-active-class="fadeIn"
+                  leave-active-class="fadeOut">
         <router-view></router-view>
       </transition>
     </div>
@@ -12,12 +14,6 @@
 export default {};
 </script>
 
-<style scoped>
-.app-main {
-  margin-top: 52px;
-}
+<style lang="scss" scoped>
 
-.app-content {
-  padding: 20px 0;
-}
 </style>

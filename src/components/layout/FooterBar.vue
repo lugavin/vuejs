@@ -1,12 +1,13 @@
 <template>
-  <!--
-  <footer class="footer">
-      <p>页脚</p>
+  <footer>
+    <div class="main-footer-container"></div>
   </footer>
-  -->
-  <div></div>
 </template>
 
 <script>
 export default {};
 </script>
+
+<style lang="scss" scoped>
+
+</style>
