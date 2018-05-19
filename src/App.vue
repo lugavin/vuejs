@@ -7,20 +7,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { Navbar, AppMain, FooterBar } from './components/layout';
-
-/**
- * @see https://cn.vuejs.org/v2/guide/custom-directive.html
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
- */
-Vue.directive('uibDropdown', {
-  inserted(el) {
-    el.addEventListener('click', () => {
-      el.classList.toggle('open');
-    });
-  }
-});
+import { Navbar, AppMain, FooterBar } from '@/components/layout';
 
 export default {
   name: 'App',

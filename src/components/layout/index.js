@@ -1,9 +1,9 @@
 /*!
- * export AppMain => import {AppMain} from './AppMain';
- * export default {} => import AppMain from './AppMain';
+ * export Module => import {Module} from '../module';
+ * export default => import Module from '../module';
  */
-import Navbar from './Navbar';
-import AppMain from './AppMain';
-import FooterBar from './FooterBar';
+import Navbar from './navbar';
+import AppMain from './main';
+import FooterBar from './footer';
 
 export { Navbar, AppMain, FooterBar };
