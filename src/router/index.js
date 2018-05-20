@@ -12,7 +12,7 @@ import Router from 'vue-router';
  * }
  */
 import Home from '@/components/home';
-import User from '@/components/user';
+import User from '@/components/modules/user';
 
 Vue.use(Router);
 

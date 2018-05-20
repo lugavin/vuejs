@@ -63,8 +63,8 @@
 
 <script>
 import Vue from 'vue';
-import LoginModal from '@/components/login';
 import JqLite from '@/components/shared/jqlite';
+import LoginModal from '@/components/account/login';
 
 /**
  * @see https://cn.vuejs.org/v2/guide/custom-directive.html

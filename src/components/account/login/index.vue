@@ -61,11 +61,7 @@
 </template>
 
 <script>
-import 'whatwg-fetch';
-import qs from 'querystring';
-
-// see https://github.com/axios/axios#interceptors
-// import axios from 'axios';
+import Http from '@/api/http';
 
 export default {
   data() {
@@ -79,31 +75,10 @@ export default {
   },
   methods: {
     login() {
-      /**
-       * 使用fetch需要注意的问题:
-       * (1)Fetch请求默认不带Cookie, 需要设置 fetch(url, {credentials: 'include'})
-       * (2)服务器返回 400, 500 错误码时并不会 reject, 只有网络错误这些导致请求不能完成时, fetch 才会被 reject
-       */
-      fetch('/rest/sso/account/login/1', {
-        method: 'POST',
-        body: qs.stringify({
-          username: this.username,
-          password: this.password
-        }),
-        headers: new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded' // 'application/json' => JSON.stringify(data)
-        })
-      })
-        .then((response) => {
-          if (response.status >= 200 && response.status < 300) {
-            return response;
-          }
-          const error = new Error(response.statusText);
-          error.response = response;
-          throw error;
-        })
-        .then(response => response.json())
-        .then(data => console.info(data));
+      Http.post('/rest/sso/account/login/1', {
+        username: this.username,
+        password: this.password
+      }).then(data => console.info(data));
     }
   }
 };
