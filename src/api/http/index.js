@@ -12,16 +12,18 @@ import _ from 'lodash';
 
 const REQUEST_METHOD = {
   GET: 'GET',
-  POST: 'POST',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
   PATCH: 'PATCH',
-  DELETE: 'DELETE'
+  HEAD: 'HEAD'
 };
 
 const MEDIA_TYPE = {
+  ALL: '*/*',
+  TEXT_XML: 'text/xml',
   TEXT_HTML: 'text/html',
   TEXT_PLAIN: 'text/plain',
-  TEXT_XML: 'text/xml',
   APPLICATION_JSON: 'application/json',
   APPLICATION_JSON_UTF8: 'application/json;charset=UTF-8',
   APPLICATION_FORM_URLENCODED: 'application/x-www-form-urlencoded',
@@ -31,22 +33,57 @@ const MEDIA_TYPE = {
   MULTIPART_FORM_DATA: 'multipart/form-data'
 };
 
-/**
- * @see https://github.github.io/fetch/
- * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Response
- */
 const RESPONSE_TYPE = {
   JSON: 'json',
   TEXT: 'text',
-  FORM_DATA: 'formData',
   BLOB: 'blob',
-  ARRAY_BUFFER: 'arrayBuffer'
+  FORMDATA: 'formData',
+  ARRAYBUFFER: 'arrayBuffer'
 };
 
-const DEFAULTS = {
+/**
+ * the default setting, override it if necessary.
+ * ```
+ * headers: {
+ *   'Accept': `${MEDIA_TYPE.APPLICATION_JSON}, ${MEDIA_TYPE.TEXT_PLAIN}, ${MEDIA_TYPE.ALL}`,
+ *   'Content-Type': MEDIA_TYPE.APPLICATION_JSON
+ * }
+ * ```
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Request
+ */
+let defaults = {
+  method: REQUEST_METHOD.GET,
   headers: {
+    Accept: `${MEDIA_TYPE.APPLICATION_JSON}, ${MEDIA_TYPE.TEXT_PLAIN}, ${MEDIA_TYPE.ALL}`,
     'Content-Type': MEDIA_TYPE.APPLICATION_JSON
+  },
+  mode: 'cors', // [cors, no-cors, same-origin]
+  credentials: 'omit', // [omit, same-origin, include]
+  cache: 'default', // [default, no-store, reload, no-cache, force-cache, only-if-cached]
+  // responseType: RESPONSE_TYPE.JSON,
+  errorHandlers: {
+    // 200: (data, textStatus, request) => console.info(data),
+    // 400: (request, textStatus, errorThrown) => console.info(request),
+    // 401: (request, textStatus, errorThrown) => console.info(request),
+    // 403: (request, textStatus, errorThrown) => console.info(request),
+    // 404: (request, textStatus, errorThrown) => console.info(request),
+    // 500: (request, textStatus, errorThrown) => console.info(request)
   }
+};
+
+/**
+ * Set global config used for override the default global settings.
+ * ```
+ * // Merge objects
+ * const defs = {headers: {'Accept': 'text/plain','Content-Type': 'application/json'}};
+ * const opts = {headers: {'Content-Type': 'application/xml'}};
+ * // Shallow copy: Object.assign({}, defs, opts) => {headers: {'Content-Type': 'application/xml'}}
+ * // Deep copy: _.merge({}, defs, opts) => {headers: {'Accept': 'text/plain','Content-Type': 'application/xml'}}
+ * ```
+ * @param {object} config
+ */
+const setup = (config = {}) => {
+  defaults = _.merge({}, defaults, config);
 };
 
 /**
@@ -117,6 +154,32 @@ const decodeURLParam = (body) => {
 };
 
 /**
+ * @param {object} resp
+ * @param {object} opts
+ * @returns {*}
+ *
+ * @see https://github.github.io/fetch/
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Response
+ */
+const handleSuccess = (resp, opts) => {
+  const responseType = RESPONSE_TYPE[String(opts.responseType).toUpperCase()];
+  if (responseType) {
+    return Promise.resolve(resp[responseType]()); // Promise state: pending => resolved
+  }
+  const dataType = resp.headers.get('Content-Type');
+  if (dataType.includes('json')) {
+    return resp.json();
+  }
+  if (dataType.includes('text')) {
+    return resp.text();
+  }
+  if (dataType.includes('image')) {
+    return resp.blob();
+  }
+  throw new Error(`Unsupported Content-Type [${dataType}]`);
+};
+
+/**
  * Error {@link fetch#Response}
  * If there is a network error or another reason why the HTTP request couldn't be fulfilled,
  * the fetch() promise will be rejected with a reference to that error.
@@ -124,28 +187,37 @@ const decodeURLParam = (body) => {
  * The promise will be resolved just as it would be for HTTP 2xx. Inspect the
  * response.status number within the resolved callback to add conditional handling of server errors to your code.
  *
- * @param response
+ * @param {object} resp
+ * @param {object} opts
  * @returns {object}
  * @see https://github.github.io/fetch/
  */
-const errorHandler = (response) => {
-  if (response.ok) {
-    return response;
+const handleError = (resp, opts) => {
+  const errorHandlers = opts.errorHandlers;
+  if (errorHandlers && typeof errorHandlers === 'object') {
+    const errorHandler = errorHandlers[resp.status];
+    if (errorHandler && typeof errorHandler === 'function') {
+      errorHandler(resp);
+    }
   }
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
+  return Promise.reject(resp); // Promise state: pending => rejected
 };
 
-const resolveResponseType = type => RESPONSE_TYPE[String(type)] || RESPONSE_TYPE.JSON;
+/**
+ * @param {object} resp
+ * @param {object} opts
+ * @returns {object}
+ */
+const handleResponse = (resp, opts) => (resp.ok ? handleSuccess(resp, opts) : handleError(resp, opts));
 
 /**
  * ```
+ * // Spread syntax
  * let {headers, body, params, ...options} = {headers: {Accept: 'text/plain'}, method: 'GET'};
  * console.info(headers) => {Accept: 'text/plain'}
  * console.info(body) => undefined
  * console.info(params) => undefined
- * console.info(options) => {method: "GET"}
+ * console.info(options) => {method: 'GET'}
  * ```
  * @param {string} url
  * @param {object=} headers
@@ -155,7 +227,7 @@ const resolveResponseType = type => RESPONSE_TYPE[String(type)] || RESPONSE_TYPE
  * @returns {*[]}
  */
 const merge = (url, { headers, body, params, ...options }) => {
-  const opts = _.merge(DEFAULTS, options, { headers });
+  const opts = _.merge({}, defaults, options);
   if (body) {
     if (typeof body === 'object') {
       switch (opts.headers['Content-Type']) {
@@ -221,19 +293,42 @@ const merge = (url, { headers, body, params, ...options }) => {
  */
 const doRequest = (url, options = {}) => {
   const [req, opts] = merge(url, options);
-  return fetch(req, opts)
-    .then(response => errorHandler(response))
-    .then(response => response[resolveResponseType(opts.responseType)]())
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
+  return fetch(req, opts).then(resp => handleResponse(resp, opts));
 };
 
-const doGet = (url, options = {}) => doRequest(url, _.merge(options, { method: REQUEST_METHOD.GET }));
-const doPost = (url, data, options = {}) => doRequest(url, _.merge(options, { method: REQUEST_METHOD.POST, body: data }));
-const doPut = (url, data, options = {}) => doRequest(url, _.merge(options, { method: REQUEST_METHOD.PUT, body: data }));
-const doPatch = (url, data, options = {}) => doRequest(url, _.merge(options, { method: REQUEST_METHOD.PATCH, body: data }));
-const doDelete = (url, options = {}) => doRequest(url, _.merge(options, { method: REQUEST_METHOD.DELETE }));
+const doGet = (url, options = {}) => doRequest(url, Object.assign({}, options, {
+  method: REQUEST_METHOD.GET
+}));
 
-export default { request: doRequest, get: doGet, post: doPost, put: doPut, patch: doPatch, delete: doDelete };
+const doPost = (url, data, options = {}) => doRequest(url, Object.assign({}, options, {
+  method: REQUEST_METHOD.POST,
+  body: data
+}));
+
+const doPut = (url, data, options = {}) => doRequest(url, Object.assign({}, options, {
+  method: REQUEST_METHOD.PUT,
+  body: data
+}));
+
+const doPatch = (url, data, options = {}) => doRequest(url, Object.assign({}, options, {
+  method: REQUEST_METHOD.PATCH,
+  body: data
+}));
+
+const doDelete = (url, options = {}) => doRequest(url, Object.assign({}, options, {
+  method: REQUEST_METHOD.DELETE
+}));
+
+const doHead = (url, options = {}) => doRequest(url, Object.assign({}, options, {
+  method: REQUEST_METHOD.HEAD
+}));
+
+export default {
+  request: doRequest,
+  get: doGet,
+  post: doPost,
+  put: doPut,
+  patch: doPatch,
+  delete: doDelete,
+  head: doHead
+};

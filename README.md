@@ -2,6 +2,26 @@
 
 > Vue Single Page Application
 
+## ECMAScript 6
+
+### [Arrow Function](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)  
+``` js
+
+// Multiple parameters
+(param1, param2, …, paramN) => { statements }
+
+// Single parameter (Parentheses are optional when there's only one parameter)
+(param) => { statements }
+param => { statements }
+
+// no parameters
+() => { statements }
+
+// Advanced Syntax
+params => expression   // eq: params => { return expression; }
+params => ({object: literal}) // eq: params => { return {object: literal}; }
+```
+
 <!--
 ## Install
 ``` bash
