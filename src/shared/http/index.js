@@ -9,6 +9,7 @@
  */
 import 'whatwg-fetch';
 import _ from 'lodash';
+import { encode } from '@/shared/url';
 
 const REQUEST_METHOD = {
   GET: 'GET',
@@ -84,73 +85,6 @@ let defaults = {
  */
 const setup = (config = {}) => {
   defaults = _.merge({}, defaults, config);
-};
-
-/**
- * @param {array|object} obj
- * @returns {string}
- */
-const encodeURLParam = (obj) => {
-  const params = [];
-
-  const addParam = (key, value) => {
-    let val;
-    if (typeof value === 'function') {
-      val = value();
-    } else {
-      val = value == null ? '' : value;
-    }
-    params[params.length] = `${encodeURIComponent(key)}=${encodeURIComponent(val)}`;
-  };
-
-  const buildParams = (prefix, body, add) => {
-    if (Array.isArray(body)) {
-      body.forEach((v, i) => {
-        if (/\[]$/.test(prefix)) {
-          add(prefix, v);
-        } else {
-          buildParams(`${prefix}[${typeof v === 'object' ? i : ''}]`, v, add);
-        }
-      });
-    } else if (typeof body === 'object') {
-      Object.keys(body).forEach((key) => {
-        buildParams(`${prefix}[${key}]`, body[key], add);
-      });
-    } else {
-      add(prefix, body);
-    }
-  };
-
-  // If an array was passed in, assume that it is an array of form elements.
-  if (Array.isArray(obj)) {
-    // Serialize the form elements
-    obj.forEach((e) => {
-      addParam(e.name, e.value);
-    });
-  } else {
-    Object.keys(obj).forEach((key) => {
-      buildParams(key, obj[key], addParam);
-    });
-  }
-
-  return params.join('&').replace(/%20/g, '+');
-};
-
-/**
- * @param {string} body
- * @returns {object}
- */
-const decodeURLParam = (body) => {
-  const obj = {};
-  body.trim().split('&').forEach((bytes) => {
-    if (bytes) {
-      const split = bytes.split('=');
-      const name = split.shift().replace(/\+/g, ' ');
-      const value = split.join('=').replace(/\+/g, ' ');
-      obj[decodeURIComponent(name)] = decodeURIComponent(value);
-    }
-  });
-  return obj;
 };
 
 /**
@@ -235,7 +169,7 @@ const merge = (url, { headers, body, params, ...options }) => {
           opts.body = JSON.stringify(body);
           break;
         case MEDIA_TYPE.APPLICATION_FORM_URLENCODED:
-          opts.body = encodeURLParam(body);
+          opts.body = encode(body);
           break;
         default:
           break;
@@ -247,7 +181,7 @@ const merge = (url, { headers, body, params, ...options }) => {
   let [req, args] = [url, params];
   if (args) {
     if (typeof args === 'object') {
-      args = encodeURLParam(args);
+      args = encode(args);
     }
     if (url.indexOf('?') !== -1) {
       req += `&${args}`;

@@ -7,6 +7,10 @@
 </template>
 
 <script>
+/**
+ * export Module => import {Module} from '../module';
+ * export default {} => import Module from '../module';
+ */
 import { AppNavbar, AppMain, AppFooter } from '@/components/layout';
 
 export default {

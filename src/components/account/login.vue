@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import Http from '@/api/http';
+import Http from '@/shared/http';
 
 export default {
   data() {

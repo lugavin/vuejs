@@ -63,7 +63,7 @@
 
 <script>
 import Vue from 'vue';
-import JqLite from '@/components/shared/jqlite';
+import JqLite from '@/shared/jqlite';
 import LoginModal from '@/components/account/login';
 
 /**
