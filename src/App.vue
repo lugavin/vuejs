@@ -8,8 +8,10 @@
 
 <script>
 /**
- * export Module => import {Module} from '../module';
- * export default {} => import Module from '../module';
+ * export default ...;
+ * // => import defaultExport from 'module-name';
+ * export { name1, name2 };
+ * // => import { name1, name2 } from 'module-name';
  */
 import { AppNavbar, AppMain, AppFooter } from '@/components/layout';
 
