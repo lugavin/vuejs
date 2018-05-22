@@ -1,20 +1,20 @@
 <template>
   <div id="app">
-    <navbar></navbar>
+    <app-navbar></app-navbar>
     <app-main></app-main>
-    <footer-bar></footer-bar>
+    <app-footer></app-footer>
   </div>
 </template>
 
 <script>
-import { Navbar, AppMain, FooterBar } from '@/components/layout';
+import { AppNavbar, AppMain, AppFooter } from '@/components/layout';
 
 export default {
   name: 'App',
   components: {
-    Navbar,
+    AppNavbar,
     AppMain,
-    FooterBar
+    AppFooter
   }
 };
 </script>

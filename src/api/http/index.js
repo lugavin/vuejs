@@ -244,8 +244,7 @@ const merge = (url, { headers, body, params, ...options }) => {
       opts.body = body;
     }
   }
-  let req = url;
-  let args = params;
+  let [req, args] = [url, params];
   if (args) {
     if (typeof args === 'object') {
       args = encodeURLParam(args);
@@ -284,8 +283,8 @@ const merge = (url, { headers, body, params, ...options }) => {
  * - referrerPolicy {string} : Specifies the value of the referer HTTP header. May be one of no-referrer, no-referrer-when-downgrade, origin, origin-when-cross-origin, unsafe-url.
  * - integrity {string} : Contains the subresource integrity value of the request.
  *
- * @param {String|Request} url
- * @param {Object=} options
+ * @param {string} url
+ * @param {object=} options
  * @returns {Promise<any>}
  *
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch

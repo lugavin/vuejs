@@ -4,7 +4,7 @@
 
 ## ECMAScript 6
 
-### [Arrow Function](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)  
+### [Arrow Function](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 ``` js
 
 // Multiple parameters
@@ -18,7 +18,8 @@ param => { statements }
 () => { statements }
 
 // Advanced Syntax
-params => expression   // eq: params => { return expression; }
+params => expression // eq: params => { return expression; }
+params => void expression // eq: params => { expression; }
 params => ({object: literal}) // eq: params => { return {object: literal}; }
 ```
 

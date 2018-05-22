@@ -15,13 +15,6 @@
 </template>
 
 <script>
-// import Http from '@/api/http';
-
-// Just for test
-// Http.get('https://api.github.com/')
-//   .then(data => console.info(data))
-//   .catch(error => console.error(error));
-
 export default {
   data() {
     return {

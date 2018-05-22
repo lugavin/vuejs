@@ -2,8 +2,8 @@
  * export Module => import {Module} from '../module';
  * export default => import Module from '../module';
  */
-import Navbar from './navbar';
-import AppMain from './main';
-import FooterBar from './footer';
+import AppNavbar from './AppNavbar';
+import AppMain from './AppMain';
+import AppFooter from './AppFooter';
 
-export { Navbar, AppMain, FooterBar };
+export { AppNavbar, AppMain, AppFooter };

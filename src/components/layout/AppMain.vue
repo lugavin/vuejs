@@ -1,6 +1,6 @@
 <template>
-  <main class="app-main">
-    <div class="container app-content">
+  <main class="container app-main">
+    <div class="app-content">
       <transition mode="out-in" enter-active-class="fadeIn" leave-active-class="fadeOut">
         <router-view></router-view>
       </transition>
