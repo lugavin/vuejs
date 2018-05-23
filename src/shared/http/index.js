@@ -64,14 +64,14 @@ let defaults = {
   mode: 'cors', // [cors, no-cors, same-origin]
   credentials: 'omit', // [omit, same-origin, include]
   cache: 'default', // [default, no-store, reload, no-cache, force-cache, only-if-cached]
-  // responseType: RESPONSE_TYPE.JSON,
+  responseType: RESPONSE_TYPE.JSON,
   statusCode: {
-    // 200: resp => console.info(resp),
-    // 400: resp => console.info(resp),
-    // 401: resp => console.info(resp),
-    // 403: resp => console.info(resp),
-    // 404: resp => console.info(resp),
-    // 500: resp => console.info(resp)
+    200: resp => console.info(resp),
+    400: resp => console.error(resp),
+    401: resp => console.error(resp),
+    403: resp => console.error(resp),
+    404: resp => console.error(resp),
+    500: resp => console.error(resp)
   }
 };
 /**

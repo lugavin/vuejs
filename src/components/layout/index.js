@@ -1,5 +1,5 @@
-import AppNavbar from './AppNavbar';
-import AppMain from './AppMain';
-import AppFooter from './AppFooter';
+import AppNavbar from './navbar';
+import AppMain from './main';
+import AppFooter from './footer';
 
 export { AppNavbar, AppMain, AppFooter };
