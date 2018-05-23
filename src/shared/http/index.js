@@ -4,6 +4,9 @@
  * (1)当接收到一个代表错误的HTTP状态码时, 从fetch()返回的Promise不会被标记为reject, 即使该HTTP响应的状态码是4xx或5xx.
  *    相反, 它会将Promise状态标记为resolve(但是会将resolve的返回值的ok属性设置为false), 仅当网络故障时或请求被阻止时, 才会标记为reject.
  * (2)默认情况下, fetch不会从服务端发送或接收任何cookies, 如果站点依赖于用户session, 则会导致未经认证的请求(要发送cookies必须设置credentials选项).
+ * Http和缓存相关的状态码
+ * - 200 OK (from cache) => 浏览器没有跟服务器确认, 直接使用本地缓存
+ * - 304 Not Modified => 先请求服务器(服务器响应这个资源没有改变), 然后浏览器再使用本地缓存
  * @see https://github.github.io/fetch/
  * @see https://github.com/axios/axios#interceptors
  */
@@ -62,16 +65,15 @@ let defaults = {
   credentials: 'omit', // [omit, same-origin, include]
   cache: 'default', // [default, no-store, reload, no-cache, force-cache, only-if-cached]
   // responseType: RESPONSE_TYPE.JSON,
-  errorHandlers: {
-    // 200: (data, textStatus, request) => console.info(data),
-    // 400: (request, textStatus, errorThrown) => console.info(request),
-    // 401: (request, textStatus, errorThrown) => console.info(request),
-    // 403: (request, textStatus, errorThrown) => console.info(request),
-    // 404: (request, textStatus, errorThrown) => console.info(request),
-    // 500: (request, textStatus, errorThrown) => console.info(request)
+  statusCode: {
+    // 200: resp => console.info(resp),
+    // 400: resp => console.info(resp),
+    // 401: resp => console.info(resp),
+    // 403: resp => console.info(resp),
+    // 404: resp => console.info(resp),
+    // 500: resp => console.info(resp)
   }
 };
-
 /**
  * Set global config used for override the default global settings.
  * ```
@@ -81,68 +83,74 @@ let defaults = {
  * // Shallow copy: Object.assign({}, defs, opts) => {headers: {'Content-Type': 'application/xml'}}
  * // Deep copy: _.merge({}, defs, opts) => {headers: {'Accept': 'text/plain','Content-Type': 'application/xml'}}
  * ```
- * @param {object} config
+ * @param {Object} config
  */
 const setup = (config = {}) => {
   defaults = _.merge({}, defaults, config);
 };
 
 /**
- * @param {object} resp
- * @param {object} opts
- * @returns {*}
+ * If there is a network error or another reason why the HTTP request couldn't be fulfilled,
+ * the fetch() promise will be rejected with a reference to that error.
+ * Note that the promise won't be rejected in case of HTTP 4xx or 5xx server responses. The promise will be resolved just as it would be for HTTP 2xx.
+ * Inspect the response.status number within the resolved callback to add conditional handling of server errors to your code.
+ *
+ * @param {Object} response
+ * @param {Object} options
+ * @returns {Promise<Response>}
  *
  * @see https://github.github.io/fetch/
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Response
  */
-const handleSuccess = (resp, opts) => {
-  const responseType = RESPONSE_TYPE[String(opts.responseType).toUpperCase()];
-  if (responseType) {
-    return Promise.resolve(resp[responseType]()); // Promise state: pending => resolved
-  }
-  const dataType = resp.headers.get('Content-Type');
-  if (dataType.includes('json')) {
-    return resp.json();
-  }
-  if (dataType.includes('text')) {
-    return resp.text();
-  }
-  if (dataType.includes('image')) {
-    return resp.blob();
-  }
-  throw new Error(`Unsupported Content-Type [${dataType}]`);
-};
-
-/**
- * Error {@link fetch#Response}
- * If there is a network error or another reason why the HTTP request couldn't be fulfilled,
- * the fetch() promise will be rejected with a reference to that error.
- * Note that the promise won't be rejected in case of HTTP 4xx or 5xx server responses.
- * The promise will be resolved just as it would be for HTTP 2xx. Inspect the
- * response.status number within the resolved callback to add conditional handling of server errors to your code.
- *
- * @param {object} resp
- * @param {object} opts
- * @returns {object}
- * @see https://github.github.io/fetch/
- */
-const handleError = (resp, opts) => {
-  const errorHandlers = opts.errorHandlers;
-  if (errorHandlers && typeof errorHandlers === 'object') {
-    const errorHandler = errorHandlers[resp.status];
-    if (errorHandler && typeof errorHandler === 'function') {
-      errorHandler(resp);
+const handleResponse = (response, options = {}) => {
+  const resolveResponseType = () => {
+    if (options.responseType) {
+      const responseBody = RESPONSE_TYPE[String(options.responseType).toUpperCase()];
+      if (responseBody) {
+        return response[responseBody]();
+      }
     }
-  }
-  return Promise.reject(resp); // Promise state: pending => rejected
+    const contentType = response.headers.get('Content-Type');
+    if (contentType.includes('json')) {
+      return response.json();
+    }
+    if (contentType.includes('text')) {
+      return response.text();
+    }
+    if (contentType.includes('image')) {
+      return response.blob();
+    }
+    throw new Error(`Unsupported Content-Type [${contentType}]`);
+  };
+  const resolveResponseHeaders = () => {
+    const headers = {};
+    response.headers.forEach((value, key) => {
+      headers[key] = value;
+    });
+    return headers;
+  };
+  return resolveResponseType().then((body) => {
+    const headers = resolveResponseHeaders();
+    const result = {
+      body,
+      headers,
+      ok: response.ok,
+      url: response.url,
+      status: response.status,
+      statusText: response.statusText
+    };
+    const statusCode = options.statusCode;
+    if (statusCode && typeof statusCode === 'object') {
+      const handler = statusCode[result.status];
+      if (handler && typeof handler === 'function') {
+        handler(result);
+      }
+    }
+    // Promise.resolve(result): pending => resolved
+    // Promise.reject(reason): pending => rejected
+    return response.ok ? Promise.resolve(result) : Promise.reject(result);
+  });
 };
-
-/**
- * @param {object} resp
- * @param {object} opts
- * @returns {object}
- */
-const handleResponse = (resp, opts) => (resp.ok ? handleSuccess(resp, opts) : handleError(resp, opts));
 
 /**
  * ```
@@ -153,43 +161,43 @@ const handleResponse = (resp, opts) => (resp.ok ? handleSuccess(resp, opts) : ha
  * console.info(params) => undefined
  * console.info(options) => {method: 'GET'}
  * ```
- * @param {string} url
- * @param {object=} headers
- * @param {(string|object)=} body
- * @param {(string|object)=} params
- * @param {object=} options
- * @returns {*[]}
+ * @param {String} url
+ * @param {Object=} headers
+ * @param {(String|Object)=} body
+ * @param {(String|Object)=} params
+ * @param {Object=} options
+ * @returns {[String,Object]}
  */
 const merge = (url, { headers, body, params, ...options }) => {
-  const opts = _.merge({}, defaults, options);
+  const settings = _.merge({}, defaults, { headers, ...options });
   if (body) {
     if (typeof body === 'object') {
-      switch (opts.headers['Content-Type']) {
+      switch (settings.headers['Content-Type']) {
         case MEDIA_TYPE.APPLICATION_JSON:
-          opts.body = JSON.stringify(body);
+          settings.body = JSON.stringify(body);
           break;
         case MEDIA_TYPE.APPLICATION_FORM_URLENCODED:
-          opts.body = encode(body);
+          settings.body = encode(body);
           break;
         default:
           break;
       }
     } else {
-      opts.body = body;
+      settings.body = body;
     }
   }
-  let [req, args] = [url, params];
+  let [requestURL, args] = [url, params];
   if (args) {
     if (typeof args === 'object') {
       args = encode(args);
     }
     if (url.indexOf('?') !== -1) {
-      req += `&${args}`;
+      requestURL += `&${args}`;
     } else {
-      req += `?${args}`;
+      requestURL += `?${args}`;
     }
   }
-  return [req, opts];
+  return [requestURL, settings];
 };
 
 /**
@@ -219,14 +227,14 @@ const merge = (url, { headers, body, params, ...options }) => {
  *
  * @param {string} url
  * @param {object=} options
- * @returns {Promise<any>}
+ * @returns {Promise<Response>}
  *
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch
  */
 const doRequest = (url, options = {}) => {
-  const [req, opts] = merge(url, options);
-  return fetch(req, opts).then(resp => handleResponse(resp, opts));
+  const [requestURL, settings] = merge(url, options);
+  return fetch(requestURL, settings).then(response => handleResponse(response, settings));
 };
 
 const doGet = (url, options = {}) => doRequest(url, Object.assign({}, options, {

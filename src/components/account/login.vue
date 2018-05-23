@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import Http from '@/shared/http';
+import http from '@/shared/http';
 
 export default {
   data() {
@@ -75,10 +75,16 @@ export default {
   },
   methods: {
     login() {
-      Http.post('/rest/sso/account/login/1', {
-        username: this.username,
-        password: this.password
-      }).then(data => console.info(data));
+      http
+        .post(
+          '/rest/sso/account/login/1',
+          {
+            username: this.username,
+            password: this.password
+          },
+          { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+        )
+        .then(data => console.info(data));
     }
   }
 };

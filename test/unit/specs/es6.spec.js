@@ -2,27 +2,17 @@
  * @see https://vue-test-utils.vuejs.org
  * @see https://github.com/vuejs/vue-test-utils-jest-example
  */
-// import 'whatwg-fetch';
-// import http from '@/shared/http';
-
 test('object assignment', () => {
-  const data = { id: 101 };
-  Object.assign(data, { name: 'admin' });
-  expect(data).toEqual({ id: 101, name: 'admin' });
+  const obj = { id: 101 };
+  Object.assign(obj, { name: 'admin' });
+  expect(obj).toEqual({ id: 101, name: 'admin' });
 });
 
-// fetch('https://api.github.com/')
-//   .then(resp => (resp.ok ? Promise.resolve(resp) : Promise.reject(resp)))
-//   .then(resp => resp.json())
-//   .then((data) => {
-//     const { current_user_url: currUserUrl } = data;
-//     console.info(`current_user_url => ${currUserUrl}`);
-//   })
-//   .catch(error => console.error(error));
-
-// http.get('https://api.github.com/')
-//   .then((data) => {
-//     const { current_user_url: currUserUrl } = data;
-//     console.info(`current_user_url => ${currUserUrl}`);
-//   })
-//   .catch(error => console.error(error));
+test('object map', () => {
+  const obj = { amount: 100 };
+  Object.keys(obj).map((k) => {
+    obj[k] += 100;
+    return obj;
+  });
+  expect(obj).toEqual({ amount: 200 });
+});
