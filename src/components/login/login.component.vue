@@ -78,8 +78,7 @@ export default {
       LoginService.login({
         username: this.username,
         password: this.password
-      }).then(data => console.info(data))
-        .catch(error => console.error(error));
+      }, data => console.info(data));
     }
   }
 };

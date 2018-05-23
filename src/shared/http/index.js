@@ -37,14 +37,6 @@ const MEDIA_TYPE = {
   MULTIPART_FORM_DATA: 'multipart/form-data'
 };
 
-const RESPONSE_TYPE = {
-  JSON: 'json',
-  TEXT: 'text',
-  BLOB: 'blob',
-  FORMDATA: 'formData',
-  ARRAYBUFFER: 'arrayBuffer'
-};
-
 /**
  * the default setting, override it if necessary.
  * ```
@@ -64,14 +56,13 @@ let defaults = {
   mode: 'cors', // [cors, no-cors, same-origin]
   credentials: 'omit', // [omit, same-origin, include]
   cache: 'default', // [default, no-store, reload, no-cache, force-cache, only-if-cached]
-  responseType: RESPONSE_TYPE.JSON,
   statusCode: {
-    200: resp => console.info(resp),
-    400: resp => console.error(resp),
-    401: resp => console.error(resp),
-    403: resp => console.error(resp),
-    404: resp => console.error(resp),
-    500: resp => console.error(resp)
+    // 200: resp => console.info(resp),
+    // 400: resp => console.error(resp),
+    // 401: resp => console.error(resp),
+    // 403: resp => console.error(resp),
+    // 404: resp => console.error(resp),
+    // 500: resp => console.error(resp)
   }
 };
 /**
@@ -104,23 +95,18 @@ const setup = (config = {}) => {
  */
 const handleResponse = (response, options = {}) => {
   const resolveResponseType = () => {
-    if (options.responseType) {
-      const responseBody = RESPONSE_TYPE[String(options.responseType).toUpperCase()];
-      if (responseBody) {
-        return response[responseBody]();
-      }
-    }
-    const contentType = response.headers.get('Content-Type');
-    if (contentType.includes('json')) {
+    const responseType = response.headers.get('Content-Type');
+    if (responseType.includes('json')) {
       return response.json();
     }
-    if (contentType.includes('text')) {
+    if (responseType.includes('text')) {
       return response.text();
     }
-    if (contentType.includes('image')) {
+    if (responseType.includes('image')) {
       return response.blob();
     }
-    throw new Error(`Unsupported Content-Type [${contentType}]`);
+    // Need to check for FormData and ArrayBuffer response type
+    throw new Error(`Unsupported Content-Type [${responseType}]`);
   };
   const resolveResponseHeaders = () => {
     const headers = {};
@@ -234,7 +220,8 @@ const merge = (url, { headers, body, params, ...options }) => {
  */
 const doRequest = (url, options = {}) => {
   const [requestURL, settings] = merge(url, options);
-  return fetch(requestURL, settings).then(response => handleResponse(response, settings));
+  return fetch(requestURL, settings)
+    .then(response => handleResponse(response, settings));
 };
 
 const doGet = (url, options = {}) => doRequest(url, Object.assign({}, options, {
