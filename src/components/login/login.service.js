@@ -3,14 +3,25 @@ import http from '@/shared/http';
 const TOKEN_HEADER_NAME = 'x-auth-token';
 
 /**
+ * POST form parameters (x-www-form-urlencoded)
+ * @param {Object} params
+ * @returns {URLSearchParams}
+ */
+const createSearchParams = (params = {}) => {
+  const searchParams = new URLSearchParams();
+  Object.keys(params).forEach((name) => {
+    searchParams.append(name, params[name]);
+  });
+  return searchParams;
+};
+
+/**
  * @param {String} username
  * @param {String} password
  * @param {Function} callback
  */
 const login = ({ username, password }, callback) => {
-  http.post('/rest/sso/account/login/1', { username, password }, {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  }).then((resp) => {
+  http.post('/rest/sso/account/login/1', createSearchParams({ username, password })).then((resp) => {
     const token = resp.headers[TOKEN_HEADER_NAME];
     localStorage.setItem(TOKEN_HEADER_NAME, token);
     callback(resp.body);

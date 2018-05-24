@@ -49,18 +49,22 @@ const encode = (obj) => {
 };
 
 /**
- * @param {string} body
+ * @param {string} paramsString
  * @returns {object}
  */
-const decode = (body) => {
+const decode = (paramsString) => {
   const obj = {};
-  body.trim().split('&').forEach((bytes) => {
-    if (bytes) {
-      const split = bytes.split('=');
-      const name = split.shift().replace(/\+/g, ' ');
-      const value = split.join('=').replace(/\+/g, ' ');
-      obj[decodeURIComponent(name)] = decodeURIComponent(value);
-    }
+  // paramsString.trim().split('&').forEach((bytes) => {
+  //   if (bytes) {
+  //     const split = bytes.split('=');
+  //     const name = split.shift().replace(/\+/g, ' ');
+  //     const value = split.join('=').replace(/\+/g, ' ');
+  //     obj[decodeURIComponent(name)] = decodeURIComponent(value);
+  //   }
+  // });
+  const searchParams = new URLSearchParams(paramsString);
+  searchParams.forEach((v, k) => {
+    obj[k] = v;
   });
   return obj;
 };

@@ -16,3 +16,35 @@ test('object map', () => {
   });
   expect(obj).toEqual({ amount: 200 });
 });
+
+describe('fetch', () => {
+  it('fetch request', () => {
+    fetch('https://api.github.com/')
+      .then((resp) => {
+        const resolveResponseHeaders = () => {
+          const headers = {};
+          resp.headers.forEach((value, key) => {
+            headers[key] = value;
+          });
+          return headers;
+        };
+        return resp.json().then((body) => {
+          const headers = resolveResponseHeaders();
+          const result = {
+            body,
+            headers,
+            ok: resp.ok,
+            url: resp.url,
+            status: resp.status,
+            statusText: resp.statusText
+          };
+          return resp.ok ? Promise.resolve(result) : Promise.reject(result);
+        });
+      })
+      .then((resp) => {
+        const { current_user_url: currUserUrl } = resp.body;
+        console.info(`current_user_url => ${currUserUrl}`);
+      })
+      .catch(error => console.error(error));
+  });
+});

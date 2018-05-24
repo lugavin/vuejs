@@ -31,6 +31,7 @@ const MEDIA_TYPE = {
   APPLICATION_JSON: 'application/json',
   APPLICATION_JSON_UTF8: 'application/json;charset=UTF-8',
   APPLICATION_FORM_URLENCODED: 'application/x-www-form-urlencoded',
+  APPLICATION_FORM_URLENCODED_UTF8: 'application/x-www-form-urlencoded;charset=UTF-8',
   APPLICATION_XML: 'application/xml',
   APPLICATION_XHTML_XML: 'application/xhtml+xml',
   APPLICATION_OCTET_STREAM: 'application/octet-stream',
@@ -50,8 +51,7 @@ const MEDIA_TYPE = {
 let defaults = {
   method: REQUEST_METHOD.GET,
   headers: {
-    Accept: `${MEDIA_TYPE.APPLICATION_JSON}, ${MEDIA_TYPE.TEXT_PLAIN}, ${MEDIA_TYPE.ALL}`,
-    'Content-Type': MEDIA_TYPE.APPLICATION_JSON
+    Accept: `${MEDIA_TYPE.APPLICATION_JSON}, ${MEDIA_TYPE.TEXT_PLAIN}, ${MEDIA_TYPE.ALL}`
   },
   mode: 'cors', // [cors, no-cors, same-origin]
   credentials: 'omit', // [omit, same-origin, include]
@@ -105,7 +105,7 @@ const handleResponse = (response, options = {}) => {
     if (responseType.includes('image')) {
       return response.blob();
     }
-    // Need to check for FormData and ArrayBuffer response type
+    // Need to check for formData and arrayBuffer response type
     throw new Error(`Unsupported Content-Type [${responseType}]`);
   };
   const resolveResponseHeaders = () => {
@@ -126,9 +126,9 @@ const handleResponse = (response, options = {}) => {
       statusText: response.statusText
     };
     const statusCode = options.statusCode;
-    if (statusCode && typeof statusCode === 'object') {
+    if (_.isPlainObject(statusCode)) {
       const handler = statusCode[result.status];
-      if (handler && typeof handler === 'function') {
+      if (_.isFunction(handler)) {
         handler(result);
       }
     }
@@ -157,16 +157,21 @@ const handleResponse = (response, options = {}) => {
 const merge = (url, { headers, body, params, ...options }) => {
   const settings = _.merge({}, defaults, { headers, ...options });
   if (body) {
-    if (typeof body === 'object') {
-      switch (settings.headers['Content-Type']) {
-        case MEDIA_TYPE.APPLICATION_JSON:
+    if (_.isPlainObject(body)) {
+      const contentType = settings.headers['Content-Type'];
+      if (contentType) {
+        if (contentType.includes(MEDIA_TYPE.APPLICATION_JSON)) {
           settings.body = JSON.stringify(body);
-          break;
-        case MEDIA_TYPE.APPLICATION_FORM_URLENCODED:
-          settings.body = encode(body);
-          break;
-        default:
-          break;
+        } else if (contentType.includes(MEDIA_TYPE.APPLICATION_FORM_URLENCODED)) {
+          // settings.body = encode(body);
+          const urlSearchParams = new URLSearchParams();
+          Object.keys(body).forEach(name => urlSearchParams.append(name, body[name]));
+          settings.body = urlSearchParams;
+        }
+      } else {
+        // Default Content-Type => application/json;charset=UTF-8
+        // Ref => https://developer.mozilla.org/zh-CN/docs/Web/API/Blob
+        settings.body = new Blob([JSON.stringify(body)], { type: MEDIA_TYPE.APPLICATION_JSON_UTF8 });
       }
     } else {
       settings.body = body;
@@ -174,45 +179,44 @@ const merge = (url, { headers, body, params, ...options }) => {
   }
   let [requestURL, args] = [url, params];
   if (args) {
-    if (typeof args === 'object') {
+    if (_.isPlainObject(args)) {
       args = encode(args);
     }
-    if (url.indexOf('?') !== -1) {
-      requestURL += `&${args}`;
-    } else {
-      requestURL += `?${args}`;
+    if (_.isString(args) && _.trim(args).length > 0) {
+      requestURL += url.indexOf('?') !== -1 ? `&${args}` : `?${args}`;
     }
   }
   return [requestURL, settings];
 };
 
 /**
- * fetch config
- * - method {string} : HTTP method (e.g. 'GET', 'POST', etc).
- * - headers {string|object|Headers} : Any headers you want to add to your request.
- * - body {string|Body types} : Any body that you want to add to your request, this can be a Blob, BufferSource, FormData, URLSearchParams, or USVString object.
- *                              Note that a request using the GET or HEAD method cannot have a body.
- *                              Body types:
- *                              Class            Default Content-Type
- *                              -----------------------------------------------------------------
- *                              String           text/plain;charset=UTF-8
- *                              URLSearchParams  application/x-www-form-urlencoded;charset=UTF-8
- *                              FormData         multipart/form-data
- *                              Blob             inherited from the blob.type property
- *                              ArrayBuffer
- *                              TypedArray
- *                              DataView
- * - mode {string} : The mode you want to use for the request (e.g. cors, no-cors, or same-origin).
- * - credentials {string} : The request credentials you want to use for the request (e.g. omit, same-origin, or include),
+ * // These properties are part of the Fetch Standard
+ * - method {String} : HTTP method (e.g. 'GET', 'POST', etc).
+ * - headers {String|Object|Headers} : Any headers you want to add to your request.
+ * - body {String|BodyTypes} : Any body that you want to add to your request, this can be a Blob, BufferSource, FormData, URLSearchParams, or USVString object.
+ *                             Note that a request using the GET or HEAD method cannot have a body.
+ *                             Body Types       Default Content-Type
+ *                             -----------------------------------------------------------------
+ *                             String           text/plain;charset=UTF-8
+ *                             URLSearchParams  application/x-www-form-urlencoded;charset=UTF-8
+ *                             FormData         multipart/form-data
+ *                             Blob             inherited from the blob.type property
+ *                             ArrayBuffer
+ *                             TypedArray
+ *                             DataView
+ * - mode {String} : The mode you want to use for the request (e.g. cors, no-cors, or same-origin).
+ * - credentials {String} : The request credentials you want to use for the request (e.g. omit, same-origin, or include),
  *                          To automatically send cookies for the current domain, this option must be provided.
- * - cache {string} : The cache mode you want to use for the request (e.g. default, no-store, reload, no-cache, force-cache, or only-if-cached).
- * - redirect {string} : The redirect mode to use, follow (automatically follow redirects), error (abort with an error if a redirect occurs), or manual (handle redirects manually).
- * - referrer {string} : A USVString specifying no-referrer, client, or a URL. The default is client.
- * - referrerPolicy {string} : Specifies the value of the referer HTTP header. May be one of no-referrer, no-referrer-when-downgrade, origin, origin-when-cross-origin, unsafe-url.
- * - integrity {string} : Contains the subresource integrity value of the request.
+ * - cache {String} : The cache mode you want to use for the request (e.g. default, no-store, reload, no-cache, force-cache, or only-if-cached).
+ * - redirect {String} : The redirect mode to use, follow (automatically follow redirects), error (abort with an error if a redirect occurs), or manual (handle redirects manually).
+ * - referrer {String} : A USVString specifying no-referrer, client, or a URL. The default is client.
+ * - referrerPolicy {String} : Specifies the value of the referer HTTP header. May be one of no-referrer, no-referrer-when-downgrade, origin, origin-when-cross-origin, unsafe-url.
+ * - integrity {String} : Contains the subresource integrity value of the request.
+ * // The following properties are fetch extensions
+ * - params {String|Object} : Map of strings or objects which will be serialized with the paramSerializer and appended as GET parameters.
  *
- * @param {string} url
- * @param {object=} options
+ * @param {String} url
+ * @param {Object=} options
  * @returns {Promise<Response>}
  *
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
