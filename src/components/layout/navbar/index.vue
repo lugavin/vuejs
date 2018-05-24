@@ -38,7 +38,7 @@
                 </a>
               </li>
               <li>
-                <a href="javascript:void(0)">
+                <a href="javascript:void(0)" @click="test">
                   <i class="fa fa-sign-out"></i> 退出
                 </a>
               </li>
@@ -63,8 +63,9 @@
 
 <script>
 import Vue from 'vue';
-import JqLite from '@/shared/jqlite';
+import JqLite from '@/components/util/jqlite';
 import LoginModal from '@/components/login/login.component';
+import LoginService from '@/components/login/login.service';
 
 /**
  * @see https://cn.vuejs.org/v2/guide/custom-directive.html
@@ -98,7 +99,11 @@ export default {
       showLoginModal: false
     };
   },
-  methods: {},
+  methods: {
+    test() {
+      LoginService.getMenus(data => console.info(data));
+    }
+  },
   components: {
     LoginModal
   }

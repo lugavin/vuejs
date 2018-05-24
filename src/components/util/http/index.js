@@ -7,12 +7,10 @@
  * Http和缓存相关的状态码
  * - 200 OK (from cache) => 浏览器没有跟服务器确认, 直接使用本地缓存
  * - 304 Not Modified => 先请求服务器(服务器响应这个资源没有改变), 然后浏览器再使用本地缓存
- * @see https://github.github.io/fetch/
- * @see https://github.com/axios/axios#interceptors
  */
 import 'whatwg-fetch';
 import _ from 'lodash';
-import { encode } from '@/shared/url';
+import { encode } from '@/components/util/url';
 
 const REQUEST_METHOD = {
   GET: 'GET',
@@ -46,25 +44,17 @@ const MEDIA_TYPE = {
  *   'Content-Type': MEDIA_TYPE.APPLICATION_JSON
  * }
  * ```
- * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Request
  */
-let defaults = {
+const defaults = {
   method: REQUEST_METHOD.GET,
   headers: {
     Accept: `${MEDIA_TYPE.APPLICATION_JSON}, ${MEDIA_TYPE.TEXT_PLAIN}, ${MEDIA_TYPE.ALL}`
   },
   mode: 'cors', // [cors, no-cors, same-origin]
   credentials: 'omit', // [omit, same-origin, include]
-  cache: 'default', // [default, no-store, reload, no-cache, force-cache, only-if-cached]
-  statusCode: {
-    // 200: resp => console.info(resp),
-    // 400: resp => console.error(resp),
-    // 401: resp => console.error(resp),
-    // 403: resp => console.error(resp),
-    // 404: resp => console.error(resp),
-    // 500: resp => console.error(resp)
-  }
+  cache: 'default' // [default, no-store, reload, no-cache, force-cache, only-if-cached]
 };
+
 /**
  * Set global config used for override the default global settings.
  * ```
@@ -77,7 +67,7 @@ let defaults = {
  * @param {Object} config
  */
 const setup = (config = {}) => {
-  defaults = _.merge({}, defaults, config);
+  _.merge(defaults, config);
 };
 
 /**
@@ -86,12 +76,10 @@ const setup = (config = {}) => {
  * Note that the promise won't be rejected in case of HTTP 4xx or 5xx server responses. The promise will be resolved just as it would be for HTTP 2xx.
  * Inspect the response.status number within the resolved callback to add conditional handling of server errors to your code.
  *
+ * @private
  * @param {Object} response
  * @param {Object} options
  * @returns {Promise<Response>}
- *
- * @see https://github.github.io/fetch/
- * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Response
  */
 const handleResponse = (response, options = {}) => {
   const resolveResponseType = () => {
@@ -125,6 +113,7 @@ const handleResponse = (response, options = {}) => {
       status: response.status,
       statusText: response.statusText
     };
+    // Fetch extensions => statusCode
     const statusCode = options.statusCode;
     if (_.isPlainObject(statusCode)) {
       const handler = statusCode[result.status];
@@ -147,46 +136,44 @@ const handleResponse = (response, options = {}) => {
  * console.info(params) => undefined
  * console.info(options) => {method: 'GET'}
  * ```
+ * @private
  * @param {String} url
  * @param {Object=} headers
- * @param {(String|Object)=} body
- * @param {(String|Object)=} params
+ * @param {(String|Object)} body
+ * @param {(String|Object)} params
  * @param {Object=} options
  * @returns {[String,Object]}
  */
 const merge = (url, { headers, body, params, ...options }) => {
-  const settings = _.merge({}, defaults, { headers, ...options });
+  const opts = _.merge({}, defaults, { headers, ...options });
   if (body) {
     if (_.isPlainObject(body)) {
-      const contentType = settings.headers['Content-Type'];
+      const contentType = opts.headers['Content-Type'];
       if (contentType) {
         if (contentType.includes(MEDIA_TYPE.APPLICATION_JSON)) {
-          settings.body = JSON.stringify(body);
+          opts.body = JSON.stringify(body);
         } else if (contentType.includes(MEDIA_TYPE.APPLICATION_FORM_URLENCODED)) {
-          // settings.body = encode(body);
-          const urlSearchParams = new URLSearchParams();
-          Object.keys(body).forEach(name => urlSearchParams.append(name, body[name]));
-          settings.body = urlSearchParams;
+          opts.body = encode(body);
         }
       } else {
         // Default Content-Type => application/json;charset=UTF-8
         // Ref => https://developer.mozilla.org/zh-CN/docs/Web/API/Blob
-        settings.body = new Blob([JSON.stringify(body)], { type: MEDIA_TYPE.APPLICATION_JSON_UTF8 });
+        opts.body = new Blob([JSON.stringify(body)], { type: MEDIA_TYPE.APPLICATION_JSON_UTF8 });
       }
     } else {
-      settings.body = body;
+      opts.body = body;
     }
   }
-  let [requestURL, args] = [url, params];
-  if (args) {
-    if (_.isPlainObject(args)) {
-      args = encode(args);
+  let [baseURL, serializedParams] = [url, params];
+  if (serializedParams) {
+    if (_.isPlainObject(serializedParams)) {
+      serializedParams = encode(serializedParams);
     }
-    if (_.isString(args) && _.trim(args).length > 0) {
-      requestURL += url.indexOf('?') !== -1 ? `&${args}` : `?${args}`;
+    if (_.isString(serializedParams) && _.trim(serializedParams).length > 0) {
+      baseURL += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
     }
   }
-  return [requestURL, settings];
+  return [baseURL, opts];
 };
 
 /**
@@ -219,43 +206,50 @@ const merge = (url, { headers, body, params, ...options }) => {
  * @param {Object=} options
  * @returns {Promise<Response>}
  *
+ * @see https://github.com/github/fetch/
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Request
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Response
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
  * @see https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch
  */
 const doRequest = (url, options = {}) => {
-  const [requestURL, settings] = merge(url, options);
-  return fetch(requestURL, settings)
-    .then(response => handleResponse(response, settings));
+  const [baseURL, settings] = merge(url, options);
+  // Fetch extensions => beforeSend
+  if (_.isFunction(settings.beforeSend)) {
+    settings.beforeSend(settings);
+  }
+  return fetch(baseURL, settings).then(response => handleResponse(response, settings));
 };
 
-const doGet = (url, options = {}) => doRequest(url, Object.assign({}, options, {
+const doGet = (url, options = {}) => doRequest(url, Object.assign(options, {
   method: REQUEST_METHOD.GET
 }));
 
-const doPost = (url, data, options = {}) => doRequest(url, Object.assign({}, options, {
+const doPost = (url, data, options = {}) => doRequest(url, Object.assign(options, {
   method: REQUEST_METHOD.POST,
   body: data
 }));
 
-const doPut = (url, data, options = {}) => doRequest(url, Object.assign({}, options, {
+const doPut = (url, data, options = {}) => doRequest(url, Object.assign(options, {
   method: REQUEST_METHOD.PUT,
   body: data
 }));
 
-const doPatch = (url, data, options = {}) => doRequest(url, Object.assign({}, options, {
+const doPatch = (url, data, options = {}) => doRequest(url, Object.assign(options, {
   method: REQUEST_METHOD.PATCH,
   body: data
 }));
 
-const doDelete = (url, options = {}) => doRequest(url, Object.assign({}, options, {
+const doDelete = (url, options = {}) => doRequest(url, Object.assign(options, {
   method: REQUEST_METHOD.DELETE
 }));
 
-const doHead = (url, options = {}) => doRequest(url, Object.assign({}, options, {
+const doHead = (url, options = {}) => doRequest(url, Object.assign(options, {
   method: REQUEST_METHOD.HEAD
 }));
 
 export default {
+  setup,
   request: doRequest,
   get: doGet,
   post: doPost,
