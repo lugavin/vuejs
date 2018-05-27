@@ -16,8 +16,12 @@
                 <label class="control-label sr-only" for="username">帐号</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  <!--
                   <input id="username" name="username" type="text" class="form-control" placeholder="帐号"
                          autofocus v-model.trim="username" @input="$v.username.$touch()">
+                  -->
+                  <input id="username" name="username" type="text" class="form-control" placeholder="帐号"
+                         autofocus v-model.trim="$v.username.$model">
                 </div>
                 <small class="help-block" v-show="$v.username.$dirty && !$v.username.required">
                   用户名不能为空
@@ -30,8 +34,12 @@
                 <label class="control-label sr-only" for="password">密码</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                  <!--
                   <input id="password" name="password" type="password" class="form-control" placeholder="密码"
                          v-model.trim="password" @input="$v.password.$touch()">
+                  -->
+                  <input id="password" name="password" type="password" class="form-control" placeholder="密码"
+                         v-model.trim="$v.password.$model">
                 </div>
                 <small class="help-block" v-show="$v.password.$dirty && !$v.password.required">
                   密码不能为空
