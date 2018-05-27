@@ -51,6 +51,7 @@ module.exports = {
     // This rule enforces consistent use of trailing commas in object and array literals.
     'comma-dangle': ['error', 'never'],
     // This rule enforces consistent line endings independent of operating system.
-    'linebreak-style': 0
+    'linebreak-style': 0, // 0 = off, 1 = warn, 2 = error
+    'max-len': [2, 120, 4]
   }
 };

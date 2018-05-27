@@ -3,7 +3,7 @@
  * @see https://github.com/github/fetch/
  */
 import 'whatwg-fetch';
-import Http from '@/components/util/http';
+import http from '@/components/util/http';
 
 test('Fetch GET', () => {
   fetch('https://api.github.com/')
@@ -36,7 +36,7 @@ test('Fetch GET', () => {
 });
 
 test('Http GET', () => {
-  Http.get('/static/favicon.ico')
+  http.get('/static/favicon.ico')
     .then((resp) => {
       const blob = resp.body;
       const img = document.createElement('img');

@@ -15,29 +15,6 @@
  */
 import { AppNavbar, AppMain, AppFooter } from '@/components/layout';
 
-import _ from 'lodash';
-import Http from '@/components/util/http';
-import TokenService from '@/components/token/token.service';
-
-Http.setup({
-  // The following properties are fetch extensions
-  // timeout: 1000, // => https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/timeout(Not supported yet),
-  beforeSend(options) {
-    const token = TokenService.getToken();
-    if (token) {
-      _.merge(options, { headers: { 'x-auth-token': token } });
-    }
-  },
-  statusCode: {
-    // 200: resp => console.info(resp),
-    // 400: resp => console.error(resp),
-    // 401: resp => console.error(resp),
-    // 403: resp => console.error(resp),
-    // 404: resp => console.error(resp),
-    // 500: resp => console.error(resp)
-  }
-});
-
 export default {
   name: 'App',
   components: {

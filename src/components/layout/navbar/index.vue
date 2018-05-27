@@ -3,8 +3,8 @@
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle pull-left"
-                :class="{collapsed:navExpanded}"
-                @click="navExpanded=!navExpanded">
+                :class="{collapsed:isNavbarCollapsed}"
+                @click="isNavbarCollapsed=!isNavbarCollapsed">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -12,11 +12,12 @@
         </button>
         <a class="navbar-brand">Vue Template</a>
       </div>
-      <div class="collapse navbar-collapse" :class="{in:navExpanded}">
+      <div class="collapse navbar-collapse" :class="{in:isNavbarCollapsed}">
         <ul class="nav navbar-nav">
           <router-link to="/home" tag="li" v-uib-dropdown>
             <a><i class="glyphicon glyphicon-home"></i> 首页</a>
           </router-link>
+          <!-- TODO 动态菜单 -->
           <li class="dropdown" v-uib-dropdown>
             <a class="dropdown-toggle" role="button">
               <i class="glyphicon glyphicon-user"></i> 帐号
@@ -38,7 +39,7 @@
                 </a>
               </li>
               <li>
-                <a href="javascript:void(0)" @click="test">
+                <a href="javascript:void(0)">
                   <i class="fa fa-sign-out"></i> 退出
                 </a>
               </li>
@@ -57,7 +58,7 @@
         </ul>
       </div>
     </div>
-    <login-modal :show="showLoginModal" @close="showLoginModal=false"></login-modal>
+    <login-modal :open="showLoginModal" @close="showLoginModal=false"></login-modal>
   </nav>
 </template>
 
@@ -65,7 +66,6 @@
 import Vue from 'vue';
 import JqLite from '@/components/util/jqlite';
 import LoginModal from '@/components/login/login.component';
-import LoginService from '@/components/login/login.service';
 
 /**
  * @see https://cn.vuejs.org/v2/guide/custom-directive.html
@@ -95,15 +95,11 @@ Vue.directive('uibDropdown', {
 export default {
   data() {
     return {
-      navExpanded: false,
+      isNavbarCollapsed: false,
       showLoginModal: false
     };
   },
-  methods: {
-    test() {
-      LoginService.getMenus(data => console.info(data));
-    }
-  },
+  methods: {},
   components: {
     LoginModal
   }

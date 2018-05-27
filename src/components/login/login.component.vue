@@ -1,5 +1,5 @@
 <template>
-  <div role="dialog" v-if="show">
+  <div role="dialog" v-if="open">
     <div class="modal fade in show">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -12,36 +12,38 @@
           </div>
           <div class="modal-body">
             <form method="post" role="form" @submit.prevent="login">
-              <div class="form-group">
+              <div class="form-group" :class="{'has-error': $v.username.$dirty && $v.username.$error}">
                 <label class="control-label sr-only" for="username">帐号</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input id="username" name="username" type="text" class="form-control"
-                         autofocus="autofocus" autocomplete="off" placeholder="帐号"
-                         v-model="username">
+                  <input id="username" name="username" type="text" class="form-control" placeholder="帐号"
+                         autofocus v-model.trim="username" @input="$v.username.$touch()">
                 </div>
-                <!--
-                <small class="help-block" v-show="username===''">
+                <small class="help-block" v-show="$v.username.$dirty && !$v.username.required">
                   用户名不能为空
                 </small>
-                <small class="help-block" v-show="!/^[a-zA-Z][a-zA-Z0-9_]{4,15}$/.test(username)">
+                <small class="help-block" v-show="!$v.username.pattern">
                   用户名必须以英文字母开头且只能包含5-15位单词
                 </small>
-                -->
               </div>
-              <div class="form-group">
+              <div class="form-group" :class="{'has-error': $v.password.$dirty && $v.password.$error}">
                 <label class="control-label sr-only" for="password">密码</label>
                 <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                  <input id="password" name="password" type="password" class="form-control"
-                         autocomplete="off" placeholder="密码"
-                         v-model="password">
+                  <input id="password" name="password" type="password" class="form-control" placeholder="密码"
+                         v-model.trim="password" @input="$v.password.$touch()">
                 </div>
+                <small class="help-block" v-show="$v.password.$dirty && !$v.password.required">
+                  密码不能为空
+                </small>
+                <small class="help-block" v-show="!$v.password.minLength">
+                  密码长度不能小于6位
+                </small>
               </div>
               <div class="checkbox">
-                <label><input name="rememberMe" type="checkbox" value="1">记住我</label>
+                <label><input name="rememberMe" type="checkbox" v-model="rememberMe">记住我</label>
               </div>
-              <button type="submit" class="btn btn-success btn-block">登录</button>
+              <button type="submit" class="btn btn-success btn-block" :disabled="$v.$invalid">登录</button>
             </form>
             <p></p>
             <div class="alert alert-warning" role="alert">
@@ -61,24 +63,39 @@
 </template>
 
 <script>
-import LoginService from './login.service';
+import { required, minLength, helpers } from 'vuelidate/lib/validators';
+import loginService from '@/components/login/login.service';
 
 export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      rememberMe: true
     };
   },
   props: {
-    show: { type: Boolean, default: false }
+    open: { type: Boolean, default: false }
   },
   methods: {
     login() {
-      LoginService.login({
+      loginService.login({
         username: this.username,
-        password: this.password
-      }, data => console.info(data));
+        password: this.password,
+        rememberMe: this.password
+      }, (data) => {
+        console.info(data);
+      });
+    }
+  },
+  validations: {
+    username: {
+      required,
+      pattern: helpers.regex('alpha', /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/)
+    },
+    password: {
+      required,
+      minLength: minLength(6)
     }
   }
 };
