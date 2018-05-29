@@ -15,6 +15,19 @@
  */
 import { AppNavbar, AppMain, AppFooter } from '@/components/layout';
 
+/**
+ * 注意: 不要在选项属性或回调上使用箭头函数, 因为箭头函数是和父级上下文绑定在一起的, this不会是如你所预期的Vue实例.
+ * <pre>
+ * // Good
+ * export default {
+ *   data() { return {}; }
+ * };
+ * // Error
+ * export default {
+ *   data: () => { return {}; }
+ * }
+ * </pre>
+ */
 export default {
   name: 'App',
   components: {

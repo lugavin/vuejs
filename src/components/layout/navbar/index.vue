@@ -2,8 +2,7 @@
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle pull-left"
-                :class="{collapsed:isNavbarCollapsed}"
+        <button type="button" class="navbar-toggle pull-left" :class="{collapsed:isNavbarCollapsed}"
                 @click="isNavbarCollapsed=!isNavbarCollapsed">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
@@ -14,39 +13,61 @@
       </div>
       <div class="collapse navbar-collapse" :class="{in:isNavbarCollapsed}">
         <ul class="nav navbar-nav">
-          <router-link to="/home" tag="li" v-uib-dropdown>
-            <a><i class="glyphicon glyphicon-home"></i> 首页</a>
+          <router-link to="/home" tag="li">
+            <a href="javascript:void(0)">
+              <i class="glyphicon glyphicon-home"></i>&nbsp;首页
+            </a>
           </router-link>
-          <!-- TODO 动态菜单 -->
-          <li class="dropdown" v-uib-dropdown>
-            <a class="dropdown-toggle" role="button">
-              <i class="glyphicon glyphicon-user"></i> 帐号
+          <li class="dropdown open dropdown-item" v-for="menu of menus" :key="menu.id"
+              v-if="isAuthenticated">
+            <a href="javascript:void(0)" class="dropdown-toggle" role="button">
+              <i :class="menu.icon"></i>&nbsp;{{menu.name}}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <router-link to="/settings" tag="li" active-class="active">
-                <a><i class="fa fa-wrench"></i> 设置</a>
+              <router-link :to="submenu.url" tag="li" v-for="submenu of menu.children" :key="submenu.id">
+                <a href="javascript:void(0)">
+                  <i :class="submenu.icon"></i>&nbsp;{{submenu.name}}
+                </a>
               </router-link>
-              <router-link to="/password" tag="li" active-class="active">
-                <a><i class="fa fa-lock"></i> 密码</a>
+            </ul>
+          </li>
+          <li class="dropdown open dropdown-item">
+            <a href="javascript:void(0)" class="dropdown-toggle" role="button">
+              <i class="glyphicon glyphicon-user"></i>&nbsp;帐号
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <router-link to="/settings" tag="li" v-if="isAuthenticated">
+                <a href="javascript:void(0)">
+                  <i class="fa fa-wrench"></i>&nbsp;设置
+                </a>
               </router-link>
-              <router-link to="/register" tag="li" active-class="active">
-                <a><i class="fa fa-plus-circle"></i> 注册</a>
+              <router-link to="/password" tag="li" v-if="isAuthenticated">
+                <a href="javascript:void(0)">
+                  <i class="fa fa-lock"></i>&nbsp;密码
+                </a>
               </router-link>
-              <li>
+              <router-link to="/register" tag="li" v-if="!isAuthenticated">
+                <a href="javascript:void(0)">
+                  <i class="fa fa-plus-circle"></i>&nbsp;注册
+                </a>
+              </router-link>
+              <li v-if="!isAuthenticated">
                 <a href="javascript:void(0)" @click="showLoginModal=true">
-                  <i class="fa fa-sign-in"></i> 登录
+                  <i class="fa fa-sign-in"></i>&nbsp;登录
                 </a>
               </li>
-              <li>
+              <li v-if="isAuthenticated">
                 <a href="javascript:void(0)">
-                  <i class="fa fa-sign-out"></i> 退出
+                  <i class="fa fa-sign-out"></i>&nbsp;退出
                 </a>
               </li>
             </ul>
-          <li class="dropdown" v-uib-dropdown>
-            <a class="dropdown-toggle" role="button">
-              <i class="glyphicon glyphicon-flag"></i> 语言
+          </li>
+          <li class="dropdown open dropdown-item">
+            <a href="javascript:void(0)" class="dropdown-toggle" role="button">
+              <i class="glyphicon glyphicon-flag"></i>&nbsp;语言
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
@@ -63,43 +84,41 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import JqLite from '@/components/util/jqlite';
 import LoginModal from '@/components/login/login.component';
-
-/**
- * @see https://cn.vuejs.org/v2/guide/custom-directive.html
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
- */
-Vue.directive('uibDropdown', {
-  inserted(el) {
-    el.addEventListener('click', () => {
-      JqLite.children(el.parentNode)
-        .filter(node => node !== el && node.nodeType === Node.ELEMENT_NODE)
-        .forEach((node) => {
-          if (node.classList.contains('open')) {
-            node.classList.remove('open');
-          }
-        });
-      if (el.classList.contains('dropdown')) {
-        el.classList.toggle('open');
-      }
-    });
-  }
-});
+import PrincipalService from '@/components/auth/principal.service';
 
 /**
  * 子组件通过 prop 属性接收父组件传递的数据, 通过 $emit 触发事件向父组件发送消息
  * @see https://cn.vuejs.org/v2/guide/components.html
  */
 export default {
+  created() {
+    this.$bus.$on('authenticationSuccess', this.getAccount);
+    this.getAccount(); // 刷新后获取会话信息
+  },
+  beforeDestroy() {
+    this.$bus.$off('authenticationSuccess', this.getAccount);
+  },
   data() {
     return {
       isNavbarCollapsed: false,
-      showLoginModal: false
+      showLoginModal: false,
+      isAuthenticated: false,
+      account: {},
+      menus: []
     };
   },
-  methods: {},
+  methods: {
+    getAccount() {
+      PrincipalService.identity().then((account) => {
+        this.isAuthenticated = PrincipalService.isAuthenticated();
+        this.account = account;
+        if (account) {
+          this.menus = account.menus;
+        }
+      });
+    }
+  },
   components: {
     LoginModal
   }
@@ -107,14 +126,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/*
+.dropdown.open.dropdown-item > a,
+.dropdown.open.dropdown-item > a:hover,
+.dropdown.open.dropdown-item > a:focus {
+  background-color: transparent;
+}
+
+.dropdown.open.dropdown-item .dropdown-menu {
+  display: none;
+}
+
 @media (min-width: 768px) {
-  .dropdown:hover .dropdown-menu {
+  .dropdown.open.dropdown-item:hover .dropdown-menu {
     display: block;
   }
 }
 
 @media screen and (max-width: 767px) {
+  .dropdown.open.dropdown-item .dropdown-menu {
+    display: block;
+  }
 }
-*/
 </style>

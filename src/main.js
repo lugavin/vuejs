@@ -3,33 +3,35 @@
 import Vue from 'vue';
 import Vuelidate from 'vuelidate';
 
-import Http from '@/components/util/http';
-import TokenService from '@/components/token/token.service';
-
 import App from './App';
 import router from './router';
 
 Vue.config.productionTip = false;
+
 Vue.use(Vuelidate);
 
-Http.setup({
-  // The following properties are fetch extensions
-  // timeout: 1000, // => https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/timeout(Not supported yet),
-  beforeSend(options) {
-    const token = TokenService.getToken();
-    if (token) {
-      const headers = options.headers || {};
-      Object.assign(headers, { 'x-auth-token': token });
-      Object.assign(options, { headers });
+/**
+ * Create a simple global event bus to communicate between vue components
+ * <pre>
+ * // this.$bus.$emit('my-event', [data]);
+ * export default {
+ *   created() {
+ *     this.$bus.$on('my-event', this.handleMyEvent);
+ *   },
+ *   beforeDestroy() {
+ *     this.$bus.$off('my-event', this.handleMyEvent);
+ *   }
+ * }
+ * </pre>
+ * @see https://vuex.vuejs.org/
+ * @see https://github.com/yangmingshan/vue-bus
+ */
+const EventBus = new Vue();
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get() {
+      return EventBus;
     }
-  },
-  statusCode: {
-    // 200: resp => console.info(resp),
-    // 400: resp => console.error(resp),
-    // 401: resp => console.error(resp),
-    // 403: resp => console.error(resp),
-    // 404: resp => console.error(resp),
-    // 500: resp => console.error(resp)
   }
 });
 

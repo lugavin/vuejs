@@ -72,7 +72,7 @@
 
 <script>
 import { required, minLength, helpers } from 'vuelidate/lib/validators';
-import loginService from '@/components/login/login.service';
+import LoginService from '@/components/login/login.service';
 
 export default {
   data() {
@@ -87,12 +87,13 @@ export default {
   },
   methods: {
     login() {
-      loginService.login({
+      LoginService.login({
         username: this.username,
         password: this.password,
         rememberMe: this.password
-      }, (data) => {
-        console.info(data);
+      }, () => {
+        this.$emit('close');
+        this.$bus.$emit('authenticationSuccess');
       });
     }
   },

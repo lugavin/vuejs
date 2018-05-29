@@ -5,16 +5,24 @@ import Home from '@/components/home';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
+  linkActiveClass: 'active',
   routes: [
+    {
+      path: '/home',
+      component: Home
+    },
     {
       path: '/',
       redirect: '/home'
-    },
-    {
-      path: '/home',
-      name: 'Home',
-      component: Home
     }
   ]
 });
+// router.addRoutes([
+//   {
+//     path: '/users',
+//     component: User
+//   }
+// ]);
+
+export default router;

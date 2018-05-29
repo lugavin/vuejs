@@ -50,9 +50,7 @@ const defaults = {
   headers: {
     Accept: `${MEDIA_TYPE.APPLICATION_JSON}, ${MEDIA_TYPE.TEXT_PLAIN}, ${MEDIA_TYPE.ALL}`
   },
-  mode: 'cors', // [cors, no-cors, same-origin]
-  credentials: 'omit', // [omit, same-origin, include]
-  cache: 'default' // [default, no-store, reload, no-cache, force-cache, only-if-cached]
+  credentials: 'same-origin' // omit(从不发送cookies) same-origin(同源才发送cookies) include(总是发送cookies)
 };
 
 /**
@@ -113,14 +111,6 @@ const handleResponse = (response, options = {}) => {
       status: response.status,
       statusText: response.statusText
     };
-    // Fetch extensions => statusCode
-    const statusCode = options.statusCode;
-    if (_.isPlainObject(statusCode)) {
-      const handler = statusCode[result.status];
-      if (_.isFunction(handler)) {
-        handler(result);
-      }
-    }
     // Promise.resolve(result): pending => resolved
     // Promise.reject(reason): pending => rejected
     return response.ok ? Promise.resolve(result) : Promise.reject(result);
@@ -214,10 +204,6 @@ const merge = (url, { headers, body, params, ...options }) => {
  */
 const doRequest = (url, options = {}) => {
   const [baseURL, settings] = merge(url, options);
-  // Fetch extensions => beforeSend
-  if (_.isFunction(settings.beforeSend)) {
-    settings.beforeSend(settings);
-  }
   return fetch(baseURL, settings).then(response => handleResponse(response, settings));
 };
 
