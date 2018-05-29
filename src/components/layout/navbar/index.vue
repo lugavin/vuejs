@@ -87,18 +87,52 @@
 import LoginModal from '@/components/login/login.component';
 import PrincipalService from '@/components/auth/principal.service';
 
+const resolveMenus = (menus = []) => {
+  const [idKey, pidKey, rootPid] = ['id', 'parentId', null];
+  const group = (items = []) => {
+    const itemMap = {};
+    items.forEach((item) => {
+      const pid = item[pidKey] || rootPid;
+      if (!itemMap[pid]) {
+        itemMap[pid] = [];
+      }
+      itemMap[pid].push(item);
+    });
+    return itemMap;
+  };
+  const menuMap = group(menus);
+  const build = (items = []) => {
+    if (items.length > 0) {
+      items.forEach((item) => {
+        const children = build(menuMap[item[idKey]]);
+        if (children && children.length > 0) {
+          Object.assign(item, { children });
+        }
+      });
+    }
+    return items;
+  };
+  const topMenus = menuMap[rootPid];
+  return build(topMenus);
+};
+
+const mixin = {
+  methods: {
+    refreshMenus(menus) {
+      this.$router.addRoutes(menus.filter(menu => !!menu.url).map(menu => ({
+        path: menu.url,
+        component: () => import(`@/components/${menu.url.startsWith('/') ? menu.url.substring(1) : menu.url}`)
+      })));
+    }
+  }
+};
+
+
 /**
  * 子组件通过 prop 属性接收父组件传递的数据, 通过 $emit 触发事件向父组件发送消息
  * @see https://cn.vuejs.org/v2/guide/components.html
  */
 export default {
-  created() {
-    this.$bus.$on('authenticationSuccess', this.getAccount);
-    this.getAccount(); // 刷新后获取会话信息
-  },
-  beforeDestroy() {
-    this.$bus.$off('authenticationSuccess', this.getAccount);
-  },
   data() {
     return {
       isNavbarCollapsed: false,
@@ -114,13 +148,23 @@ export default {
         this.isAuthenticated = PrincipalService.isAuthenticated();
         this.account = account;
         if (account) {
-          this.menus = account.menus;
+          const menus = account.menus;
+          if (menus && menus.length > 0) {
+            this.menus = resolveMenus(menus);
+            this.refreshMenus(menus);
+          }
         }
       });
     }
   },
-  components: {
-    LoginModal
+  components: { LoginModal },
+  mixins: [mixin],
+  created() {
+    this.$bus.$on('authenticationSuccess', this.getAccount);
+    this.getAccount(); // 刷新后获取会话信息
+  },
+  beforeDestroy() {
+    this.$bus.$off('authenticationSuccess', this.getAccount);
   }
 };
 </script>

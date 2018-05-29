@@ -26,11 +26,11 @@ Vue.use(Vuelidate);
  * @see https://vuex.vuejs.org/
  * @see https://github.com/yangmingshan/vue-bus
  */
-const EventBus = new Vue();
+const eventBus = new Vue();
 Object.defineProperties(Vue.prototype, {
   $bus: {
     get() {
-      return EventBus;
+      return eventBus;
     }
   }
 });
