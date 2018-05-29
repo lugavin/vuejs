@@ -18,29 +18,11 @@ export default new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes: [
-    {
-      path: '/403',
-      component: ForbiddenError
-    },
-    {
-      path: '/404',
-      component: NotFoundError
-    },
-    {
-      path: '/500',
-      component: InternalServerError
-    },
-    {
-      path: '/home',
-      component: Home
-    },
-    {
-      path: '/',
-      redirect: '/home'
-    },
-    {
-      path: '*',
-      redirect: '/404'
-    }
+    { path: '/403', component: ForbiddenError },
+    { path: '/404', component: NotFoundError },
+    { path: '/500', component: InternalServerError },
+    { path: '/home', component: Home },
+    { path: '/', redirect: '/home' },
+    { path: '*', redirect: '/404' }
   ]
 });
