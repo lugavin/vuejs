@@ -3,7 +3,7 @@
  * @see https://github.com/github/fetch/
  */
 import 'whatwg-fetch';
-import Http from '@/util/Http';
+import Http from '@/components/util/Http';
 
 test('Fetch GET', () => {
   fetch('https://api.github.com/')

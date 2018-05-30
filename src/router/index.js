@@ -9,20 +9,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Home from '../components/home';
-import { ForbiddenError, NotFoundError, InternalServerError } from '../components/error';
-
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes: [
-    { path: '/403', component: ForbiddenError },
-    { path: '/404', component: NotFoundError },
-    { path: '/500', component: InternalServerError },
-    { path: '/home', component: Home },
-    { path: '/', redirect: '/home' },
-    { path: '*', redirect: '/404' }
+    { path: '/home', component: () => import('../components/home') },
+    { path: '/', redirect: '/home' }
   ]
 });

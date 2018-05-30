@@ -52,6 +52,9 @@ function notify(msg, type, callback) {
             callback();
           }
         }
+        this.close();
+      },
+      close() {
         const $dialog = document.getElementById(this.uid);
         $dialog.parentNode.removeChild($dialog);
       }

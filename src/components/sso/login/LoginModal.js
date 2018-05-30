@@ -98,12 +98,14 @@ const LoginModal = Vue.extend({
   },
   methods: {
     login() {
+      const $this = this;
       LoginService.login({
-        username: this.username,
-        password: this.password,
-        rememberMe: this.password
-      }, function callback() {
-        this.$bus.$emit('authenticationSuccess');
+        username: $this.username,
+        password: $this.password,
+        rememberMe: $this.password
+      }).then(() => {
+        $this.$bus.$emit('authenticationSuccess');
+        $this.close();
       });
     },
     close() {

@@ -83,8 +83,9 @@
 
 <script>
 import Dialog from '../shared/dialog';
-import LoginModal from '../shared/login/LoginModal';
-import PrincipalService from '../shared/auth/PrincipalService';
+import LoginModal from '../sso/login/LoginModal';
+import LoginService from '../sso/login/LoginService';
+import PrincipalService from '../sso/auth/PrincipalService';
 
 const resolveMenus = (menus = []) => {
   const [idKey, pidKey, rootPid] = ['id', 'parentId', null];
@@ -158,8 +159,16 @@ export default {
       new LoginModal().show();
     },
     logout() {
+      const $this = this;
       Dialog.confirm('确认退出吗?', (yes) => {
-        console.info(yes);
+        if (yes) {
+          LoginService.logout().then(() => {
+            $this.isAuthenticated = false;
+            $this.account = {};
+            $this.menus = [];
+            $this.$router.push('/');
+          });
+        }
       });
     }
   },

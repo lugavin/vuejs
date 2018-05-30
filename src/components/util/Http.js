@@ -82,6 +82,9 @@ const setup = (config = {}) => {
 const handleResponse = (response, options = {}) => {
   const resolveResponseType = () => {
     const responseType = response.headers.get('Content-Type');
+    if (!responseType) {
+      return Promise.resolve();
+    }
     if (responseType.includes('json')) {
       return response.json();
     }
@@ -111,7 +114,7 @@ const handleResponse = (response, options = {}) => {
       status: response.status,
       statusText: response.statusText
     };
-    // Promise.resolve(result): pending => resolved
+    // Promise.resolve(value|promise|thenable): pending => resolved
     // Promise.reject(reason): pending => rejected
     return response.ok ? Promise.resolve(result) : Promise.reject(result);
   });
