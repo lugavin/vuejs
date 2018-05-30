@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars,max-len */
-import Http from '@/components/util/http';
-import PrincipalService from '@/components/auth/principal.service';
+import Http from '@/util/Http';
+import PrincipalService from '../auth/PrincipalService';
 
 /**
  * POST form parameters (x-www-form-urlencoded)

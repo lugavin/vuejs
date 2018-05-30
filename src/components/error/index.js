@@ -1,5 +1,5 @@
-import ForbiddenError from './error_403';
-import NotFoundError from './error_404';
-import InternalServerError from './error_50x';
+import ForbiddenError from './ForbiddenError';
+import NotFoundError from './NotFoundError';
+import InternalServerError from './InternalServerError';
 
 export { ForbiddenError, NotFoundError, InternalServerError };

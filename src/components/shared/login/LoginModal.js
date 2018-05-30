@@ -1,10 +1,15 @@
-<template>
-  <div role="dialog" v-if="open">
-    <div class="modal fade in show">
+/* eslint-disable no-param-reassign,no-bitwise */
+import Vue from 'vue';
+import { required, minLength, helpers } from 'vuelidate/lib/validators';
+import LoginService from './LoginService';
+
+const template = `
+  <div :id="uid">
+    <div class="modal fade in show" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" @click="$emit('close')">
+            <button type="button" class="close" @click="close">
               <span aria-hidden="true">&times;</span>
               <span class="sr-only">Close</span>
             </button>
@@ -68,22 +73,21 @@
     </div><!-- /.modal -->
     <div class="modal-backdrop fade in"></div>
   </div>
-</template>
+`;
 
-<script>
-import { required, minLength, helpers } from 'vuelidate/lib/validators';
-import LoginService from '@/components/login/login.service';
-
-export default {
+/**
+ * Create a subclass of the base Vue constructor. The argument should be an object containing component options.
+ * @see https://vuejs.org/v2/api/#Vue-extend
+ */
+const LoginModal = Vue.extend({
+  template,
   data() {
     return {
       username: '',
       password: '',
-      rememberMe: true
+      rememberMe: true,
+      uid: this.genUID('dialog')
     };
-  },
-  props: {
-    open: { type: Boolean, default: false }
   },
   methods: {
     login() {
@@ -92,9 +96,19 @@ export default {
         password: this.password,
         rememberMe: this.password
       }, () => {
-        this.$emit('close');
         this.$bus.$emit('authenticationSuccess');
       });
+    },
+    close() {
+      const $dialog = document.getElementById(this.uid);
+      $dialog.parentNode.removeChild($dialog);
+    },
+    genUID(prefix) {
+      do {
+        // "~~" acts like a faster Math.floor() here
+        prefix += ~~(Math.random() * 1000000);
+      } while (document.getElementById(prefix));
+      return prefix;
     }
   },
   validations: {
@@ -107,8 +121,27 @@ export default {
       minLength: minLength(6)
     }
   }
-};
-</script>
+});
 
-<style scoped>
-</style>
+/**
+ * Don’t use arrow functions on an options property or callback, such as
+ * <pre>
+ * // Good
+ * export default {
+ *   created() { console.log(this); }
+ * }
+ * // Error
+ * export default {
+ *   created: () => { console.log(this); }
+ * }
+ * </pre>
+ * Since arrow functions are bound to the parent context, this will not be the Vue instance as you’d expect.
+ * @see https://cn.vuejs.org/v2/guide/instance.html
+ */
+LoginModal.prototype.show = function show(options = {}) { // Define instance method
+  const appendTo = document.createElement('template');
+  document.querySelector(options.container || 'body').appendChild(appendTo);
+  this.$mount(appendTo);
+};
+
+export default LoginModal;

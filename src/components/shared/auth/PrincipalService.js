@@ -1,5 +1,5 @@
-import Http from '@/components/util/http';
-// import TrackerService from '@/components/tracker/tracker.service';
+import Http from '@/util/Http';
+// import TrackerService from '../tracker/TrackerService';
 
 let userIdentity;
 let authenticated = false;

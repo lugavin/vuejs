@@ -82,7 +82,7 @@ const directives = {
   minlength: minlengthDirective
 };
 
-const VueValid = {
+export default {
   install(Vue, options) {
     // Vue.mixin(mixin);
     Object.keys(directives).forEach((k) => {
@@ -91,5 +91,3 @@ const VueValid = {
   },
   version: '0.0.1'
 };
-
-export default VueValid;

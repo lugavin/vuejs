@@ -10,7 +10,7 @@
  */
 import 'whatwg-fetch';
 import _ from 'lodash';
-import { encode } from '@/components/util/url';
+import { encode } from './URL';
 
 const REQUEST_METHOD = {
   GET: 'GET',

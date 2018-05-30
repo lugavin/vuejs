@@ -18,8 +18,7 @@
               <i class="glyphicon glyphicon-home"></i>&nbsp;首页
             </a>
           </router-link>
-          <li class="dropdown open dropdown-item" v-for="menu of menus" :key="menu.id"
-              v-if="isAuthenticated">
+          <li class="dropdown open dropdown-item" v-for="menu of menus" :key="menu.id">
             <a href="javascript:void(0)" class="dropdown-toggle" role="button">
               <i :class="menu.icon"></i>&nbsp;{{menu.name}}
               <span class="caret"></span>
@@ -54,12 +53,12 @@
                 </a>
               </router-link>
               <li v-if="!isAuthenticated">
-                <a href="javascript:void(0)" @click="showLoginModal=true">
+                <a href="javascript:void(0)" @click="login">
                   <i class="fa fa-sign-in"></i>&nbsp;登录
                 </a>
               </li>
               <li v-if="isAuthenticated">
-                <a href="javascript:void(0)">
+                <a href="javascript:void(0)" @click="logout">
                   <i class="fa fa-sign-out"></i>&nbsp;退出
                 </a>
               </li>
@@ -79,13 +78,12 @@
         </ul>
       </div>
     </div>
-    <login-modal :open="showLoginModal" @close="showLoginModal=false"></login-modal>
   </nav>
 </template>
 
 <script>
-import LoginModal from '@/components/login/login.component';
-import PrincipalService from '@/components/auth/principal.service';
+import LoginModal from '../shared/login/LoginModal';
+import PrincipalService from '../shared/auth/PrincipalService';
 
 const resolveMenus = (menus = []) => {
   const [idKey, pidKey, rootPid] = ['id', 'parentId', null];
@@ -121,12 +119,12 @@ const mixin = {
     refreshMenus(menus) {
       this.$router.addRoutes(menus.filter(menu => !!menu.url).map(menu => ({
         path: menu.url,
+        // Ref => https://router.vuejs.org/guide/advanced/lazy-loading.html
         component: () => import(`@/components/${menu.url.startsWith('/') ? menu.url.substring(1) : menu.url}`)
       })));
     }
   }
 };
-
 
 /**
  * 子组件通过 prop 属性接收父组件传递的数据, 通过 $emit 触发事件向父组件发送消息
@@ -136,7 +134,6 @@ export default {
   data() {
     return {
       isNavbarCollapsed: false,
-      showLoginModal: false,
       isAuthenticated: false,
       account: {},
       menus: []
@@ -155,17 +152,21 @@ export default {
           }
         }
       });
+    },
+    login() {
+      new LoginModal().show();
+    },
+    logout() {
     }
   },
-  components: { LoginModal },
-  mixins: [mixin],
   created() {
     this.$bus.$on('authenticationSuccess', this.getAccount);
     this.getAccount(); // 刷新后获取会话信息
   },
   beforeDestroy() {
     this.$bus.$off('authenticationSuccess', this.getAccount);
-  }
+  },
+  mixins: [mixin]
 };
 </script>
 
