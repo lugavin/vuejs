@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign,no-bitwise */
 import Vue from 'vue';
 import { required, minLength, helpers } from 'vuelidate/lib/validators';
 import LoginService from './LoginService';
@@ -75,6 +74,14 @@ const template = `
   </div>
 `;
 
+const genUID = (prefix) => {
+  do {
+    /* eslint-disable no-param-reassign,no-bitwise */
+    prefix += ~~(Math.random() * 1000000); // "~~" acts like a faster Math.floor() here
+  } while (document.getElementById(prefix));
+  return prefix;
+};
+
 /**
  * Create a subclass of the base Vue constructor. The argument should be an object containing component options.
  * @see https://vuejs.org/v2/api/#Vue-extend
@@ -86,7 +93,7 @@ const LoginModal = Vue.extend({
       username: '',
       password: '',
       rememberMe: true,
-      uid: this.genUID('dialog')
+      uid: genUID('auth-dialog')
     };
   },
   methods: {
@@ -95,20 +102,13 @@ const LoginModal = Vue.extend({
         username: this.username,
         password: this.password,
         rememberMe: this.password
-      }, () => {
+      }, function callback() {
         this.$bus.$emit('authenticationSuccess');
       });
     },
     close() {
       const $dialog = document.getElementById(this.uid);
       $dialog.parentNode.removeChild($dialog);
-    },
-    genUID(prefix) {
-      do {
-        // "~~" acts like a faster Math.floor() here
-        prefix += ~~(Math.random() * 1000000);
-      } while (document.getElementById(prefix));
-      return prefix;
     }
   },
   validations: {
@@ -138,9 +138,9 @@ const LoginModal = Vue.extend({
  * Since arrow functions are bound to the parent context, this will not be the Vue instance as you’d expect.
  * @see https://cn.vuejs.org/v2/guide/instance.html
  */
-LoginModal.prototype.show = function show(options = {}) { // Define instance method
+LoginModal.prototype.show = function show() { // Define instance method
   const appendTo = document.createElement('template');
-  document.querySelector(options.container || 'body').appendChild(appendTo);
+  document.body.appendChild(appendTo);
   this.$mount(appendTo);
 };
 

@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import Dialog from '../shared/dialog';
 import LoginModal from '../shared/login/LoginModal';
 import PrincipalService from '../shared/auth/PrincipalService';
 
@@ -157,6 +158,9 @@ export default {
       new LoginModal().show();
     },
     logout() {
+      Dialog.confirm('确认退出吗?', (yes) => {
+        console.info(yes);
+      });
     }
   },
   created() {
