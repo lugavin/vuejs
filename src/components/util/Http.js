@@ -10,6 +10,7 @@
  */
 import 'whatwg-fetch';
 import _ from 'lodash';
+// import * as NProgress from 'nprogress';
 import { encode } from './URL';
 
 const REQUEST_METHOD = {
@@ -104,6 +105,7 @@ const handleResponse = (response, options = {}) => {
     });
     return headers;
   };
+  // NProgress.start();
   return resolveResponseType().then((body) => {
     const headers = resolveResponseHeaders();
     const result = {
@@ -114,6 +116,7 @@ const handleResponse = (response, options = {}) => {
       status: response.status,
       statusText: response.statusText
     };
+    // NProgress.done();
     // Promise.resolve(value|promise|thenable): pending => resolved
     // Promise.reject(reason): pending => rejected
     return response.ok ? Promise.resolve(result) : Promise.reject(result);

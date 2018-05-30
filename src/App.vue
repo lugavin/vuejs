@@ -16,6 +16,7 @@ export default {
 
 <style lang="scss">
 @import "~animate.css";
+/*@import 'nprogress/nprogress.css';*/
 
 $fa-font-path: "~font-awesome/fonts/";
 @import "~font-awesome/scss/font-awesome";
