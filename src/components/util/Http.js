@@ -135,8 +135,8 @@ const handleResponse = (response, options = {}) => {
  * @private
  * @param {String} url
  * @param {Object=} headers
- * @param {(String|Object)} body
- * @param {(String|Object)} params
+ * @param {String|Object} body
+ * @param {String|Object} params
  * @param {Object=} options
  * @returns {[String,Object]}
  */

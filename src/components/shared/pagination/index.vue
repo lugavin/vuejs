@@ -24,15 +24,8 @@
 </template>
 
 <script>
-function isNumber(value) {
-  return !isNaN(parseInt(`${value}`, 10));
-}
-
-function getValueInRange(value, max, min = 0) {
-  return Math.max(Math.min(value, max), min);
-}
-
 /**
+ * @see https://cn.vuejs.org/v2/guide/components-props.html
  * @see https://github.com/ng-bootstrap/ng-bootstrap/blob/master/src/pagination/pagination.ts
  */
 export default {
@@ -47,16 +40,19 @@ export default {
     ellipses: { type: Boolean, default: true },
     // Whether to rotate pages when maxSize > number of pages. Current page will be in the middle
     rotate: { type: Boolean, default: true },
-    // Number of items in collection.
-    collectionSize: { type: Number },
+    // Pagination display size: small or large
+    size: { type: String },
     // Maximum number of pages to display.
     maxSize: { type: Number, default: 5 },
+    // Number of items in collection.
+    totalItems: { type: Number, required: true },
     // Current page. Page numbers start with 1
     currPage: { type: Number, default: 1 },
     // Number of items per page.
-    pageSize: { type: Number, default: 10 },
-    // Pagination display size: small or large
-    size: { type: String }
+    pageSize: { type: Number, default: 10 }
+  },
+  mounted() {
+    this.updatePages(this.page);
   },
   data() {
     return {
@@ -65,23 +61,23 @@ export default {
       page: this.currPage
     };
   },
-  watch: {
-    pageSize() {
-      this.updatePages(this.page);
-    },
-    currPage() {
-      this.updatePages(this.page);
-    },
-    collectionSize() {
-      this.updatePages(this.page);
-    }
-  },
   computed: {
     hasPrevious() {
       return this.page > 1;
     },
     hasNext() {
       return this.page < this.pageCount;
+    }
+  },
+  watch: {
+    totalItems() {
+      this.updatePages(this.page);
+    },
+    pageSize() {
+      this.updatePages(this.page);
+    },
+    currPage() {
+      this.updatePages(this.page);
     }
   },
   methods: {
@@ -146,16 +142,16 @@ export default {
       return [start, end];
     },
     setPageInRange(newPageNo) {
-      const prevPageNo = this.page;
-      this.page = getValueInRange(newPageNo, this.pageCount, 1);
-      if (this.page !== prevPageNo && isNumber(this.collectionSize)) {
+      const prePageNo = this.page;
+      this.page = Math.max(Math.min(newPageNo, this.pageCount), 1);
+      if (this.page !== prePageNo && !isNaN(parseInt(String(this.totalItems), 10))) {
         this.pageChange();
       }
     },
     updatePages(newPage) {
-      this.pageCount = Math.ceil(this.collectionSize / this.pageSize);
+      this.pageCount = Math.ceil(this.totalItems / this.pageSize);
 
-      if (!isNumber(this.pageCount)) {
+      if (isNaN(parseInt(String(this.pageCount), 10))) {
         this.pageCount = 0;
       }
 

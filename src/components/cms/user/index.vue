@@ -39,24 +39,18 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="text-center">
-          <vb-pagination :collectionSize="pagination.totalItems"
-                         :currPage="pagination.currPage"
-                         :pageSize="pagination.pageSize"
-                         @pageChange="pageChange"/>
+          <vb-pagination v-bind="pagination" @pageChange="pageChange"/>
         </div>
       </div>
       <!--
       <div class="col-sm-5">
         <div class="text-left">
-          <span>&nbsp;每页 {{ pagination.pageSize }} 条，总共 {{ pagination.totalItems }} 条记录</span>
+          <span>每页 {{ pagination.pageSize }} 条，总共 {{ pagination.totalItems }} 条记录</span>
         </div>
       </div>
       <div class="col-sm-7">
         <div class="text-right">
-          <vb-pagination :collectionSize="pagination.totalItems"
-                         :currPage="pagination.currPage"
-                         :pageSize="pagination.pageSize"
-                         @pageChange="pageChange"/>
+          <vb-pagination v-bind="pagination" @pageChange="pageChange"/>
         </div>
       </div>
       -->
@@ -75,24 +69,28 @@ export default {
   data() {
     return {
       pagination: {
-        totalItems: 0,
+        totalItems: -1,
         pageSize: 10,
         currPage: 1
       },
+      queryVo: {},
       users: []
     };
   },
   methods: {
     getUsers() {
-      UserService.getUsers({ param: {}, page: this.pagination.currPage, rows: this.pagination.pageSize })
-        .then(resp => resp.body)
+      UserService.getUsers({
+        param: this.queryVo,
+        page: this.pagination.currPage,
+        rows: this.pagination.pageSize
+      }).then(resp => resp.body)
         .then((body) => {
           this.users = body.items;
           this.pagination.totalItems = body.totalItems;
         });
     },
-    pageChange(currPage) {
-      this.pagination.currPage = currPage;
+    pageChange(page) {
+      this.pagination.currPage = page;
       this.getUsers();
     }
   },
