@@ -68,7 +68,6 @@ const rules = {
 
 const requiredDirective = {
   bind(el, binding, vnode, oldVnode) {
-    console.info(this);
   }
 };
 const patternDirective = {};

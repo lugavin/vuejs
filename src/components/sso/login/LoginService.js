@@ -21,13 +21,11 @@ const login = ({ username, password, rememberMe = true }) =>
       const account = resp.body;
       PrincipalService.authenticate(account);
       return account;
-    })
-    .catch(error => console.error(error));
+    });
 
 const logout = () =>
   Http.get('/rest/sso/account/logout')
-    .then(() => PrincipalService.authenticate(null))
-    .catch(error => console.error(error));
+    .then(() => PrincipalService.authenticate(null));
 
 export default {
   login,

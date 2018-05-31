@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 
@@ -29,7 +30,7 @@ const disconnect = () => {
 
 const subscribe = () => {
   subscriber = stompClient.subscribe('/topic/tracker', (data) => {
-    console.info(JSON.parse(data.body));
+    // console.info(JSON.parse(data.body));
   });
 };
 

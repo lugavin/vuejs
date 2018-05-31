@@ -14,6 +14,11 @@ export default {
 };
 </script>
 
+<!--
+vue-html-loader and css-loader translates non-root URLs to relative paths.
+In order to treat it like a module path, prefix it with ~
+Ref => https://github.com/vuejs/vue-loader/issues/193
+-->
 <style lang="scss">
 @import "~animate.css";
 /*@import 'nprogress/nprogress.css';*/
