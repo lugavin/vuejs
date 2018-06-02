@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import VbPagination from '@/components/shared/pagination';
+import VbPagination from '@/components/bootstrap/pagination';
 import UserService from './UserService';
 
 export default {

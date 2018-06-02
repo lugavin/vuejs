@@ -1,0 +1,35 @@
+<template>
+  <div class="alert" :class="['alert-' + type, {'alert-dismissible': dismissible}]" role="alert" v-show="show">
+    <button v-if="dismissible" type="button" class="close" aria-label="Close" @click="closeHandler">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+export const alertProps = {
+  /**
+   * A flag indicating if a given alert can be dismissed (closed) by a user. If this flag is set, a close button (in a
+   * form of an ×) will be displayed.
+   */
+  dismissible: { type: Boolean, default: true },
+  /**
+   * Alert type (CSS class). Bootstrap 3 recognizes the following types: "success", "info", "warning", "danger".
+   */
+  type: { type: String, default: 'warning' }
+};
+export default {
+  props: alertProps,
+  data() {
+    return { show: true };
+  },
+  methods: {
+    closeHandler() {
+      this.show = false;
+      this.$emit('close');
+    }
+  }
+};
+</script>

@@ -1,6 +1,41 @@
 <template>
   <section>
     <div class="row">
+      <div class="col-sm-12">
+        <vb-carousel>
+          <vb-carousel-slide>
+            <img src="../../assets/img/bg2.jpg">
+            <div class="carousel-caption">
+              <h3>Slide label</h3>
+              <p>This carousel uses customized default values.</p>
+            </div>
+          </vb-carousel-slide>
+          <vb-carousel-slide>
+            <img src="../../assets/img/bg3.png">
+            <div class="carousel-caption">
+              <h3>Slide label</h3>
+              <p>This carousel uses customized default values.</p>
+            </div>
+          </vb-carousel-slide>
+          <vb-carousel-slide>
+            <img src="../../assets/img/bg4.png">
+            <div class="carousel-caption">
+              <h3>Slide label</h3>
+              <p>This carousel uses customized default values.</p>
+            </div>
+          </vb-carousel-slide>
+          <vb-carousel-slide>
+            <img src="https://placehold.it/1440x400">
+            <div class="carousel-caption">
+              <h3>Slide label</h3>
+              <p>This carousel uses customized default values.</p>
+            </div>
+          </vb-carousel-slide>
+        </vb-carousel>
+      </div>
+    </div>
+    <p></p>
+    <div class="row">
       <div class="col-sm-6">
         <div class="panel panel-primary">
           <div class="panel-body">
@@ -13,16 +48,26 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <vb-pagination v-bind="pagination"
-                       @pageChange="pageChange"/>
+        <vb-pagination v-bind="pagination" @pageChange="pageChange"/>
       </div>
     </div>
-    <p>当前第 {{ pagination.currPage }} 页，每页 {{ pagination.pageSize }} 条，总共 {{ pagination.totalItems }} 条记录</p>
+    <div class="row">
+      <div class="col-sm-6">
+        <vb-alert>
+          当前第 <strong>{{ pagination.currPage }}</strong> 页，
+          每页 <strong>{{ pagination.pageSize }}</strong> 条，
+          总共 <strong>{{ pagination.totalItems }}</strong> 条记录
+        </vb-alert>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import VbPagination from '@/components/shared/pagination';
+import VbPagination from '../bootstrap/pagination';
+import VbAlert from '../bootstrap/alert';
+import VbCarousel from '../bootstrap/carousel';
+import VbCarouselSlide from '../bootstrap/carousel/slide';
 
 export default {
   data() {
@@ -39,9 +84,18 @@ export default {
       this.pagination.currPage = page;
     }
   },
-  components: { VbPagination }
+  components: { VbPagination, VbAlert, VbCarousel, VbCarouselSlide }
 };
 </script>
 
 <style lang="scss" scoped>
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .8s ease;
+}
 </style>

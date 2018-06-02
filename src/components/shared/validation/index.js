@@ -1,24 +1,5 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars,max-len */
 
-/**
- * form
- * formName.$error = {};
- * formName.$$success = {};
- * formName.$pending = undefined;
- * formName.$name = $attrs.name;
- * formName.$dirty = false;
- * formName.$pristine = true;
- * formName.$valid = true;
- * formName.$invalid = false;
- * formName.$submitted = false;
- *
- * field
- * formName.fieldName.$dirty = false;
- * formName.fieldName.$pristine = true;
- * formName.fieldName.$valid = true;
- * formName.fieldName.$invalid = false;
- * formName.fieldName.$error = false;
- */
 const mixin = {
   computed: {
     $dirty() {
@@ -48,44 +29,61 @@ const mixin = {
   }
 };
 
-const rules = {
-  required(value) {
-    return !!value;
+const EMAIL_PATTERN = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+
+const validators = {
+  required(value, flag) {
+    return flag && String(value).trim() !== '';
+  },
+  email(value, flag) {
+    return flag && EMAIL_PATTERN.test(value);
   },
   pattern(value, regexp) {
     if (value === '') {
       return true;
     }
-    return new RegExp(regexp).test(value);
+    return (typeof regexp === 'string') ? new RegExp(regexp).test(value) : regexp.test(value);
   },
-  maxlength(value, length) {
-    return value.length <= length;
+  minlength(value, min) {
+    return String(value).length >= parseInt(min, 10);
   },
-  minlength(value, length) {
-    return value.length >= length;
+  maxlength(value, max) {
+    return String(value).length <= parseInt(max, 10);
   }
 };
 
-const requiredDirective = {
-  bind(el, binding, vnode, oldVnode) {
-  }
-};
-const patternDirective = {};
-const maxlengthDirective = {};
-const minlengthDirective = {};
-
-const directives = {
-  required: requiredDirective,
-  pattern: patternDirective,
-  maxlength: maxlengthDirective,
-  minlength: minlengthDirective
-};
-
+/**
+ * @see https://cn.vuejs.org/v2/guide/plugins.html
+ * @see https://cn.vuejs.org/v2/guide/custom-directive.html
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/dataset
+ */
 export default {
-  install(Vue, options) {
+  install(Vue, options = {}) {
     // Vue.mixin(mixin);
-    Object.keys(directives).forEach((k) => {
-      Vue.directive(k, directives[k]);
+    Vue.directive('validate', {
+      /**
+       * @param {HTMLElement} el
+       * @param {VNodeDirective} binding (readonly)
+       * @param {VNode} vnode (readonly)
+       */
+      bind(el, binding, vnode) {
+        // console.info(el.name);
+        // console.info(el.dataset);
+        // console.info(binding.value);
+        // console.info(vnode.context);
+        const rules = binding.value;
+        if (typeof rules === 'object') {
+          const fieldName = el.name;
+          el.addEventListener('input', (event) => {
+            Object.keys(rules).forEach((rule) => {
+              const handler = validators[rule];
+              if (typeof handler === 'function') {
+                console.info(`${fieldName}.${rule}.$valid => ${handler(event.target.value, rules[rule])}`);
+              }
+            });
+          });
+        }
+      }
     });
   },
   version: '0.0.1'

@@ -1,7 +1,7 @@
 <template>
   <main class="container app-main">
     <div class="app-content">
-      <transition mode="out-in" enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <transition name="fade" mode="in-out">
         <router-view></router-view>
       </transition>
     </div>
@@ -19,5 +19,15 @@ export default {};
 
 .app-content {
   padding-top: 20px;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .8s ease;
 }
 </style>
