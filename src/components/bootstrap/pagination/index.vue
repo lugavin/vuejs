@@ -145,14 +145,14 @@ export default {
     setPageInRange(newPageNo) {
       const prePageNo = this.page;
       this.page = Math.max(Math.min(newPageNo, this.pageCount), 1);
-      if (this.page !== prePageNo && !isNaN(parseInt(String(this.totalItems), 10))) {
+      if (this.page !== prePageNo && this.isNumber(this.totalItems)) {
         this.pageChange();
       }
     },
     updatePages(newPage) {
       this.pageCount = Math.ceil(this.totalItems / this.pageSize);
 
-      if (isNaN(parseInt(String(this.pageCount), 10))) {
+      if (!this.isNumber(this.pageCount)) {
         this.pageCount = 0;
       }
 
@@ -182,6 +182,9 @@ export default {
         // adding ellipses
         this.applyEllipses(start, end);
       }
+    },
+    isNumber(value) {
+      return !Number.isNaN(Number.parseInt(`${value}`, 10));
     },
     /**
      *  An event fired when the page is changed.

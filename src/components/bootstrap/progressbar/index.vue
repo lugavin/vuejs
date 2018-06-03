@@ -1,8 +1,6 @@
 <template>
   <div class="progress" :style="{height: height}">
-    <div class="progress-bar" role="progressbar"
-         :class="[{'progress-bar-striped':striped, active:animated}, type ? 'progress-bar-' + type : '']"
-         :style="{width: percentVal + '%'}">
+    <div class="progress-bar" :class="progressbarClass" role="progressbar" :style="{width: percentVal + '%'}">
       <span v-if="showValue">{{ percentVal }}%</span>
       <slot></slot>
     </div>
@@ -49,7 +47,17 @@ export default {
       return Math.min(this.value, this.max);
     },
     percentVal() {
-      return 100 * (this.val / this.max);
+      return Number.parseFloat(((this.val / this.max) * 100).toFixed(2));
+    },
+    progressbarClass() {
+      const cls = {
+        'progress-bar-striped': this.striped,
+        active: this.animated
+      };
+      if (this.type) {
+        cls[`progress-bar-${this.type}`] = true;
+      }
+      return cls;
     }
   }
 };

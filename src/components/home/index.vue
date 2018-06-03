@@ -2,32 +2,11 @@
   <section>
     <div class="row">
       <div class="col-sm-12">
-        <vb-carousel>
-          <vb-carousel-slide>
-            <img src="../../assets/img/bg2.jpg">
+        <vb-carousel v-if="images.length">
+          <vb-carousel-slide v-for="(img,idx) of images" :key="idx">
+            <img :src="img.url">
             <div class="carousel-caption">
-              <h3>Slide label</h3>
-              <p>This carousel uses customized default values.</p>
-            </div>
-          </vb-carousel-slide>
-          <vb-carousel-slide>
-            <img src="../../assets/img/bg3.png">
-            <div class="carousel-caption">
-              <h3>Slide label</h3>
-              <p>This carousel uses customized default values.</p>
-            </div>
-          </vb-carousel-slide>
-          <vb-carousel-slide>
-            <img src="../../assets/img/bg4.png">
-            <div class="carousel-caption">
-              <h3>Slide label</h3>
-              <p>This carousel uses customized default values.</p>
-            </div>
-          </vb-carousel-slide>
-          <vb-carousel-slide>
-            <img src="https://placehold.it/1440x400">
-            <div class="carousel-caption">
-              <h3>Slide label</h3>
+              <h3>#{{ idx+1 }} slide label</h3>
               <p>This carousel uses customized default values.</p>
             </div>
           </vb-carousel-slide>
@@ -37,10 +16,13 @@
     <p></p>
     <div class="row">
       <div class="col-sm-6">
-        <vb-progressbar :value="50"
+        <vb-progressbar :value="progressVal"
+                        :max="300"
                         :animated="true"
                         :striped="true"
-                        :showValue="true"> Loading... </vb-progressbar>
+                        :showValue="true"
+                        type="danger"> Loading...
+        </vb-progressbar>
       </div>
     </div>
     <div class="row">
@@ -85,8 +67,22 @@ export default {
         totalItems: 120,
         pageSize: 10,
         currPage: 1
-      }
+      },
+      images: [],
+      progressVal: 0
     };
+  },
+  mounted() {
+    this.images.push(
+      { url: 'https://placehold.it/1440x400' },
+      { url: '/static/img/bg1.png' },
+      { url: '/static/img/bg2.png' },
+      { url: '/static/img/bg3.png' },
+      { url: '/static/img/bg4.png' }
+    );
+    setInterval(() => {
+      this.progressVal += 1;
+    }, 1000);
   },
   methods: {
     pageChange(page) {

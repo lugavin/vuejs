@@ -12,9 +12,9 @@ export default {
     };
   },
   mounted() {
-    this.$parent.$children.forEach((child, index) => {
+    this.$parent.$children.forEach((child) => {
       if (child === this) {
-        this.slideId = `slide-${index}`;
+        this.slideId = `slide-${new Date().getTime()}-${Math.floor(Math.random() * 1000000)}`;
         this.$parent.slideIds.push(this.slideId);
       }
     });
