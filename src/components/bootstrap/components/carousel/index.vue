@@ -22,7 +22,7 @@
 </template>
 
 <script>
-export const carouselProps = {
+export const options = {
   // The amount of time to delay between automatically cycling an item. If false, carousel will not automatically cycle.
   interval: { type: Number, default: 5000 },
   // Whether the carousel should cycle continuously or have hard stops.
@@ -33,7 +33,7 @@ export const carouselProps = {
   controls: { type: Boolean, default: true }
 };
 export default {
-  props: carouselProps,
+  props: options,
   data() {
     return {
       slideChangeInterval: null,

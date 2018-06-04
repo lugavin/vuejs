@@ -16,13 +16,14 @@
     <p></p>
     <div class="row">
       <div class="col-sm-6">
-        <vb-progressbar :value="progressVal"
-                        :max="300"
-                        :animated="true"
-                        :striped="true"
-                        :showValue="true"
-                        type="danger"> Loading...
-        </vb-progressbar>
+        <button type="button" class="btn btn-primary" v-tooltip="{placement:'top'}" title="tooltip">
+          Tooltip on top
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <vb-progressbar :animated="true" :striped="true" :value="progressVal"></vb-progressbar>
       </div>
     </div>
     <div class="row">
@@ -54,12 +55,6 @@
 </template>
 
 <script>
-import VbPagination from '../bootstrap/pagination';
-import VbAlert from '../bootstrap/alert';
-import VbCarousel from '../bootstrap/carousel';
-import VbCarouselSlide from '../bootstrap/carousel/slide';
-import VbProgressbar from '../bootstrap/progressbar';
-
 export default {
   data() {
     return {
@@ -88,8 +83,7 @@ export default {
     pageChange(page) {
       this.pagination.currPage = page;
     }
-  },
-  components: { VbPagination, VbAlert, VbCarousel, VbCarouselSlide, VbProgressbar }
+  }
 };
 </script>
 

@@ -14,6 +14,7 @@ import Vuelidate from 'vuelidate';
 
 import App from './App';
 import router from './router';
+import VBootstrap from './components/bootstrap';
 
 /**
  * @see https://router.vuejs.org/guide/advanced/navigation-guards.html#global-guards
@@ -46,6 +47,7 @@ Object.defineProperties(Vue.prototype, { // Define instance method
 });
 
 Vue.use(Vuelidate);
+Vue.use(VBootstrap);
 Vue.config.productionTip = false;
 
 /**

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-export const progressbarProps = {
+export const options = {
   /**
    * Maximal value to be displayed in the progressbar.
    */
@@ -41,7 +41,7 @@ export const progressbarProps = {
 
 };
 export default {
-  props: progressbarProps,
+  props: options,
   computed: {
     val() {
       return Math.min(this.value, this.max);

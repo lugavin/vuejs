@@ -9,7 +9,7 @@
 </template>
 
 <script>
-export const alertProps = {
+export const options = {
   /**
    * A flag indicating if a given alert can be dismissed (closed) by a user. If this flag is set, a close button (in a
    * form of an ×) will be displayed.
@@ -21,7 +21,7 @@ export const alertProps = {
   type: { type: String, default: 'warning' }
 };
 export default {
-  props: alertProps,
+  props: options,
   data() {
     return { show: true };
   },

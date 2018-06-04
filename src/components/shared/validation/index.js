@@ -59,7 +59,12 @@ const validators = {
  */
 export default {
   install(Vue, options = {}) {
-    // Vue.mixin(mixin);
+    const context = Vue.extend({
+      mixin
+    });
+    /**
+     * Directive是用来在已经存在的dom元素上实现一些行为
+     */
     Vue.directive('validate', {
       /**
        * @param {HTMLElement} el

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-export const paginationProps = {
+export const options = {
   // Whether to disable buttons from user input
   disabled: { type: Boolean, default: false },
   // Whether to show the "First" and "Last" page links
@@ -51,7 +51,7 @@ export const paginationProps = {
  * @see https://github.com/ng-bootstrap/ng-bootstrap/blob/master/src/pagination/pagination.ts
  */
 export default {
-  props: paginationProps,
+  props: options,
   mounted() {
     this.updatePages(this.page);
   },

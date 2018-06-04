@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import VbPagination from '@/components/bootstrap/pagination';
 import UserService from './UserService';
 
 export default {
@@ -93,8 +92,7 @@ export default {
       this.pagination.currPage = page;
       this.getUsers();
     }
-  },
-  components: { VbPagination }
+  }
 };
 </script>
 
