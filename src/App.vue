@@ -1,16 +1,20 @@
 <template>
   <div id="app">
-    <app-navbar></app-navbar>
-    <app-main></app-main>
-    <app-footer></app-footer>
+    <app-header class="app-header"></app-header>
+    <app-main class="app-main"></app-main>
+    <app-footer class="app-footer"></app-footer>
   </div>
 </template>
 
 <script>
-import { AppNavbar, AppMain, AppFooter } from './components/layout';
+import { AppHeader, AppMain, AppFooter } from './components/layout';
 
 export default {
-  components: { AppNavbar, AppMain, AppFooter }
+  components: {
+    AppHeader,
+    AppMain,
+    AppFooter
+  }
 };
 </script>
 
@@ -20,12 +24,36 @@ In order to treat it like a module path, prefix it with ~
 Ref => https://github.com/vuejs/vue-loader/issues/193
 -->
 <style lang="scss">
-@import "~animate.css";
-/*@import 'nprogress/nprogress.css';*/
-
 $fa-font-path: "~font-awesome/fonts/";
 @import "~font-awesome/scss/font-awesome";
+@import "~bootstrap/scss/bootstrap";
+/*@import "~animate.css";*/
+/*@import 'nprogress/nprogress.css';*/
 
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-@import "~bootstrap-sass/assets/stylesheets/_bootstrap";
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+/* Move down(up) content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.app-header {
+}
+
+.app-main {
+}
+
+/* Attach a footer to the bottom of the viewport when page content is short. */
+.app-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 3.5rem;
+  line-height: 3.5rem;
+  background-color: #f5f5f5;
+}
 </style>

@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars,max-len */
-
+/**
+ * @see https://caniuse.com/#feat=form-validation
+ * @see https://html.spec.whatwg.org/multipage/forms.html#client-side-form-validation
+ */
 const mixin = {
   computed: {
     $dirty() {

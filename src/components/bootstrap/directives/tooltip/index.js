@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-vars,no-param-reassign */
+/**
+ * @see https://github.com/FezVrasta/popper.js/blob/master/packages/tooltip/src/index.js
+ */
 const template = `
   <div class="tooltip" role="tooltip">
     <div class="tooltip-arrow"></div>

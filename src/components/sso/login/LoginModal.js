@@ -1,82 +1,70 @@
 import Vue from 'vue';
-import { required, minLength, helpers } from 'vuelidate/lib/validators';
 import LoginService from './LoginService';
 
 const template = `
   <div :id="uid">
-    <div class="modal fade in show" role="dialog">
-      <div class="modal-dialog">
+    <div class="modal fade show" role="dialog" style="display: block;">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" @click="close">
+            <h5 class="modal-title">请登录</h5>
+            <button type="button" class="close" aria-label="Close" @click="close">
               <span aria-hidden="true">&times;</span>
-              <span class="sr-only">Close</span>
             </button>
-            <h4 class="modal-title">用户登录</h4>
           </div>
           <div class="modal-body">
-            <form method="post" role="form" @submit.prevent="login">
-              <div class="form-group" :class="{'has-error': $v.username.$dirty && $v.username.$error}">
-                <label class="control-label sr-only" for="username">帐号</label>
+            <form role="form" novalidate="novalidate" @submit.prevent="login">
+              <div class="form-group">
+                <label class="sr-only" for="username">帐号</label>
                 <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <!--
+                  <div class="input-group-prepend">
+                    <div class="input-group-text"><i class="fa fa-user"></i></div>
+                  </div>
                   <input id="username" name="username" type="text" class="form-control" placeholder="帐号"
-                         autofocus v-model.trim="username" @input="$v.username.$touch()">
-                  -->
-                  <input id="username" name="username" type="text" class="form-control" placeholder="帐号"
-                         autofocus v-model.trim="$v.username.$model">
+                         style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;"
+                         autofocus required pattern="^[a-zA-Z][a-zA-Z0-9_]{4,15}$" v-model.trim="loginVo.username">
+                  <div class="invalid-feedback">请输入正确的帐号</div>
                 </div>
-                <small class="help-block" v-show="$v.username.$dirty && !$v.username.required">
-                  用户名不能为空
-                </small>
-                <small class="help-block" v-show="!$v.username.pattern">
-                  用户名必须以英文字母开头且只能包含5-15位单词
-                </small>
               </div>
-              <div class="form-group" :class="{'has-error': $v.password.$dirty && $v.password.$error}">
-                <label class="control-label sr-only" for="password">密码</label>
+              <div class="form-group">
+                <label class="sr-only" for="password">密码</label>
                 <div class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                  <!--
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                  </div>
                   <input id="password" name="password" type="password" class="form-control" placeholder="密码"
-                         v-model.trim="password" @input="$v.password.$touch()">
-                  -->
-                  <input id="password" name="password" type="password" class="form-control" placeholder="密码"
-                         v-model.trim="$v.password.$model">
+                         style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;"
+                         required minlength="6" v-model.trim="loginVo.password">
+                  <div class="invalid-feedback">请输入正确的密码</div>
                 </div>
-                <small class="help-block" v-show="$v.password.$dirty && !$v.password.required">
-                  密码不能为空
-                </small>
-                <small class="help-block" v-show="!$v.password.minLength">
-                  密码长度不能小于6位
-                </small>
               </div>
-              <div class="checkbox">
-                <label><input name="rememberMe" type="checkbox" v-model="rememberMe">记住我</label>
+              <div class="form-group">
+                <div class="form-check">
+                  <input id="rememberMe" type="checkbox" class="form-check-input" v-model="loginVo.rememberMe">
+                  <label class="form-check-label" for="rememberMe">记住我</label>
+                </div>
               </div>
-              <button type="submit" class="btn btn-success btn-block" :disabled="$v.$invalid">登录</button>
+              <button type="submit" class="btn btn-success btn-block">登录</button>
             </form>
-            <p></p>
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-light px-2" role="alert">
               <a href="javascript:void(0)" class="alert-link">
-                <i class="glyphicon glyphicon-lock"></i> 忘记密码
+                <i class="fa fa-lock"></i> <small>忘记密码</small>
               </a>
-              <a href="javascript:void(0)" class="alert-link pull-right">
-                <i class="glyphicon glyphicon-phone"></i> 注册一个新账号
+              <a href="javascript:void(0)" class="alert-link float-right">
+                <i class="fa fa-mobile"></i> <small>注册一个新账号</small>
               </a>
             </div>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <div class="modal-backdrop fade in"></div>
+    <div class="modal-backdrop fade show"></div>
   </div>
 `;
-
+// Private Method
 const genUID = (prefix) => {
   do {
-    /* eslint-disable no-param-reassign,no-bitwise */
+    // eslint-disable-next-line no-param-reassign, no-bitwise
     prefix += ~~(Math.random() * 1000000); // "~~" acts like a faster Math.floor() here
   } while (document.getElementById(prefix));
   return prefix;
@@ -84,43 +72,41 @@ const genUID = (prefix) => {
 
 /**
  * Create a subclass of the base Vue constructor. The argument should be an object containing component options.
+ *
  * @see https://vuejs.org/v2/api/#Vue-extend
+ * @see http://getbootstrap.com/docs/4.1/components/forms/
+ * @see https://caniuse.com/#feat=form-validation
+ * @see https://html.spec.whatwg.org/multipage/forms.html#client-side-form-validation
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/API/ValidityState
  */
 const LoginModal = Vue.extend({
   template,
   data() {
     return {
-      username: '',
-      password: '',
-      rememberMe: true,
-      uid: genUID('auth-dialog')
+      uid: genUID('auth-dialog'),
+      loginVo: {
+        username: '',
+        password: '',
+        rememberMe: true
+      }
     };
   },
   methods: {
-    login() {
-      const $this = this;
-      LoginService.login({
-        username: $this.username,
-        password: $this.password,
-        rememberMe: $this.password
-      }).then(() => {
-        $this.$bus.$emit('authenticationSuccess');
-        $this.close();
-      });
+    login(event) {
+      const form = event.target;
+      if (!form.checkValidity()) {
+        event.stopPropagation();
+      } else {
+        LoginService.login(this.loginVo).then(() => {
+          this.$bus.$emit('authenticationSuccess');
+          this.close();
+        });
+      }
+      form.classList.add('was-validated');
     },
     close() {
       const $dialog = document.getElementById(this.uid);
       $dialog.parentNode.removeChild($dialog);
-    }
-  },
-  validations: {
-    username: {
-      required,
-      pattern: helpers.regex('alpha', /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/)
-    },
-    password: {
-      required,
-      minLength: minLength(6)
     }
   }
 });
@@ -138,6 +124,7 @@ const LoginModal = Vue.extend({
  * }
  * </pre>
  * Since arrow functions are bound to the parent context, this will not be the Vue instance as you’d expect.
+ *
  * @see https://cn.vuejs.org/v2/guide/instance.html
  */
 LoginModal.prototype.show = function show() { // Define instance method

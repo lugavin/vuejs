@@ -1,52 +1,68 @@
 <template>
   <section>
-    <div class="row">
-      <div class="col-sm-12">
-        <vb-carousel v-if="images.length">
-          <vb-carousel-slide v-for="(img,idx) of images" :key="idx">
-            <img :src="img.url">
-            <div class="carousel-caption">
-              <h3>#{{ idx+1 }} slide label</h3>
-              <p>This carousel uses customized default values.</p>
+    <vb-carousel v-if="images.length">
+      <vb-carousel-slide v-for="(img,idx) of images" :key="idx">
+        <!--<img class="img-fluid" src="https://placehold.it/1440x400">-->
+        <img class="d-block w-100" :src="img.url">
+        <div class="carousel-caption d-none d-md-block">
+          <h3>#{{ idx+1 }} slide label</h3>
+          <p>This carousel uses customized default values.</p>
+        </div>
+      </vb-carousel-slide>
+    </vb-carousel>
+    <div class="container my-5">
+      <div class="row">
+        <div class="col">
+          <div class="card border-primary">
+            <div class="card-body">
+              <p class="card-text">前端：Vue + Vue-Router + Bootstrap + Fetch + ES6 + Webpack</p>
+              <p class="card-text">后端：SpringCloud + SpringSession + Redis + Elasticsearch</p>
+              <p class="card-text">服务器：Nginx(Web服务器) + Tomcat(应用服务器)</p>
             </div>
-          </vb-carousel-slide>
-        </vb-carousel>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-info">
+            <div class="card-body">
+              <p>
+                <vb-alert>A simple primary alert</vb-alert>
+              </p>
+              <p>
+                <vb-progressbar :animated="true"
+                                :striped="true"
+                                :value="progressVal"
+                                :showValue="true"></vb-progressbar>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <p></p>
-    <div class="row">
-      <div class="col-sm-6">
-        <button type="button" class="btn btn-primary" v-tooltip="{placement:'top'}" title="tooltip">
-          Tooltip on top
-        </button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <vb-progressbar :animated="true" :striped="true" :value="progressVal"></vb-progressbar>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <vb-pagination v-bind="pagination" @pageChange="pageChange"/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <vb-alert>
-          当前第 <strong>{{ pagination.currPage }}</strong> 页，
-          每页 <strong>{{ pagination.pageSize }}</strong> 条，
-          总共 <strong>{{ pagination.totalItems }}</strong> 条记录
-        </vb-alert>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="panel panel-primary">
-          <div class="panel-body">
-            前端：Vue + Vue-router + Vuex + Bootstrap + Fetch + Es6 + Webpack <br/>
-            后端：CMS + SSO + OSS + SpringCloud + Redis + Elasticsearch <br/>
-            服务器：Nginx(Web服务器) + Tomcat(应用服务器) <br/>
+      <div class="row">
+        <div class="col">
+          <div class="card border-info">
+            <div class="card-body">
+              <div v-if="pagination.totalItems > -1">
+                <vb-pagination v-bind="pagination" @pageChange="pageChange"/>
+                <p class="card-text">
+                  当前第 <strong>{{ pagination.currPage }}</strong> 页，
+                  每页 <strong>{{ pagination.pageSize }}</strong> 条，
+                  总共 <strong>{{ pagination.totalItems }}</strong> 条记录
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-body">
+              <p>
+                <button type="button" class="btn btn-primary" title="tooltip"
+                        @click="collapsed=!collapsed" v-tooltip="{placement:'top'}">
+                  Toggle
+                </button>
+              </p>
+              <p class="card-text" v-collapse="collapsed">You can collapse this card by clicking Toggle</p>
+            </div>
           </div>
         </div>
       </div>
@@ -64,12 +80,12 @@ export default {
         currPage: 1
       },
       images: [],
-      progressVal: 0
+      progressVal: 0,
+      collapsed: false
     };
   },
   mounted() {
     this.images.push(
-      { url: 'https://placehold.it/1440x400' },
       { url: '/static/img/bg1.png' },
       { url: '/static/img/bg2.png' },
       { url: '/static/img/bg3.png' },
@@ -88,6 +104,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.row {
+  margin-bottom: 1rem;
+}
+
 .fade-enter,
 .fade-leave-to {
   opacity: 0;

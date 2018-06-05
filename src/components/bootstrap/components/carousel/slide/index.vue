@@ -1,10 +1,19 @@
 <template>
-  <div class="item" :class="{active: slideId === activeId}">
+  <div class="carousel-item" :class="{active: slideId === activeId}">
     <slot></slot>
   </div>
 </template>
 
 <script>
+// Private Method
+function genUID(prefix) {
+  do {
+    // eslint-disable-next-line no-param-reassign, no-bitwise
+    prefix += ~~(Math.random() * 1000000); // "~~" acts like a faster Math.floor() here
+  } while (document.getElementById(prefix));
+  return prefix; // `${prefix}-${new Date().getTime()}-${Math.floor(Math.random() * 1000000)}`;
+}
+
 export default {
   data() {
     return {
@@ -14,7 +23,7 @@ export default {
   mounted() {
     this.$parent.$children.forEach((child) => {
       if (child === this) {
-        this.slideId = `slide-${new Date().getTime()}-${Math.floor(Math.random() * 1000000)}`;
+        this.slideId = genUID('slide');
         this.$parent.slideIds.push(this.slideId);
       }
     });

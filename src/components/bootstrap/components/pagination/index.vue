@@ -1,24 +1,24 @@
 <template>
   <ul class="pagination" :class="[size ? 'pagination-' + size : '']">
-    <li v-if="boundaryLinks" :class="{disabled: !hasPrevious || disabled}">
-      <a aria-label="First" href="javascript:void(0)" @click="!!selectPage(1)">&laquo;&laquo;</a>
+    <li class="page-item" :class="{disabled: !hasPrevious || disabled}" v-if="boundaryLinks">
+      <a class="page-link" href="javascript:void(0)" @click="!!selectPage(1)">&laquo;&laquo;</a>
     </li>
-    <li v-if="directionLinks" :class="{disabled: !hasPrevious || disabled}">
-      <a aria-label="Previous" href="javascript:void(0)" @click="!!selectPage(page-1)">&laquo;</a>
+    <li class="page-item" :class="{disabled: !hasPrevious || disabled}" v-if="directionLinks">
+      <a class="page-link" href="javascript:void(0)" @click="!!selectPage(page-1)">&laquo;</a>
     </li>
-    <li :class="{active: pageNo === page, disabled: isEllipsis(pageNo) || disabled}"
+    <li class="page-item" :class="{active: pageNo === page, disabled: isEllipsis(pageNo) || disabled}"
         v-for="(pageNo, index) of pages" :key="index">
-      <a v-if="isEllipsis(pageNo)">...</a>
-      <a v-if="!isEllipsis(pageNo)" href="javascript:void(0)" @click="!!selectPage(pageNo)">
+      <a class="page-link" v-if="isEllipsis(pageNo)">...</a>
+      <a class="page-link" href="javascript:void(0)" @click="!!selectPage(pageNo)" v-if="!isEllipsis(pageNo)">
         {{ pageNo }}
-        <span v-if="pageNo === page" class="sr-only">(current)</span>
+        <span class="sr-only" v-if="pageNo === page">(current)</span>
       </a>
     </li>
-    <li v-if="directionLinks" :class="{disabled: !hasNext || disabled}">
-      <a aria-label="Next" href="javascript:void(0)" @click="!!selectPage(page+1)">&raquo;</a>
+    <li class="page-item" :class="{disabled: !hasNext || disabled}" v-if="directionLinks">
+      <a class="page-link" href="javascript:void(0)" @click="!!selectPage(page+1)">&raquo;</a>
     </li>
-    <li v-if="boundaryLinks" :class="{disabled: !hasNext || disabled}">
-      <a aria-label="Last" href="javascript:void(0)" @click="!!selectPage(pageCount)">&raquo;&raquo;</a>
+    <li class="page-item" :class="{disabled: !hasNext || disabled}" v-if="boundaryLinks">
+      <a class="page-link" href="javascript:void(0)" @click="!!selectPage(pageCount)">&raquo;&raquo;</a>
     </li>
   </ul>
 </template>
@@ -41,10 +41,10 @@ export const options = {
   maxSize: { type: Number, default: 5 },
   // Number of items in collection.
   totalItems: { type: Number, required: true },
-  // Current page. Page numbers start with 1
-  currPage: { type: Number, default: 1 },
   // Number of items per page.
-  pageSize: { type: Number, default: 10 }
+  pageSize: { type: Number, default: 10 },
+  // Current page. Page numbers start with 1
+  currPage: { type: Number, default: 1 }
 };
 /**
  * @see https://cn.vuejs.org/v2/guide/components-props.html
@@ -52,9 +52,6 @@ export const options = {
  */
 export default {
   props: options,
-  mounted() {
-    this.updatePages(this.page);
-  },
   data() {
     return {
       pages: [],
@@ -63,6 +60,9 @@ export default {
     };
   },
   computed: {
+    totalPages() {
+      return Math.floor(((this.totalItems + this.pageSize) - 1) / this.pageSize);
+    },
     hasPrevious() {
       return this.page > 1;
     },
@@ -70,14 +70,11 @@ export default {
       return this.page < this.pageCount;
     }
   },
+  mounted() {
+    this.updatePages(this.page);
+  },
   watch: {
-    totalItems() {
-      this.updatePages(this.page);
-    },
-    pageSize() {
-      this.updatePages(this.page);
-    },
-    currPage() {
+    totalPages() {
       this.updatePages(this.page);
     }
   },

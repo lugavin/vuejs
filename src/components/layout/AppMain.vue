@@ -1,10 +1,13 @@
 <template>
-  <main class="container app-main">
-    <div class="app-content">
-      <transition name="fade" mode="in-out">
-        <router-view></router-view>
-      </transition>
-    </div>
+  <main role="main">
+    <!--
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
+    -->
+    <transition>
+      <router-view></router-view>
+    </transition>
   </main>
 </template>
 
@@ -13,14 +16,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-.app-main {
-  padding-top: 50px;
-}
-
-.app-content {
-  padding-top: 20px;
-}
-
+/*
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
@@ -28,6 +24,7 @@ export default {};
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .8s ease;
+  transition: opacity .2s ease;
 }
+*/
 </style>

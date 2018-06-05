@@ -2,14 +2,14 @@ import Vue from 'vue';
 
 const template = `
   <div :id="uid">
-    <div class="modal fade in show" role="dialog">
+    <div class="modal fade show" role="dialog" style="display: block;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">{{ title }}</h4>
+            <h5 class="modal-title">{{ title }}</h5>
           </div>
           <div class="modal-body">
-            <label class="h4">{{ msg }}</label>
+            <div class="h5" role="alert">{{ msg }}</div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" @click="callback(false)" v-if="type==='confirm'">取消</button>
@@ -18,7 +18,7 @@ const template = `
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <div class="modal-backdrop fade in"></div>
+    <div class="modal-backdrop fade show"></div>
   </div>
 `;
 

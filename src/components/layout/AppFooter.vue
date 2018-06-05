@@ -1,7 +1,8 @@
 <template>
-  <footer class="nav navbar-fixed-bottom navbar-inverse">
-    <div class="text-center">
-      <a href="mailto:lugavin@outlook.com" class="navbar-link">© 2014 - 2018 Gavin Software Inc.</a>
+  <footer>
+    <div class="container">
+      <a href="#" class="float-right">Back to top &uarr;</a>
+      <span class="text-muted">&copy; 2014-2018 Gavin Software Inc.</span>
     </div>
   </footer>
 </template>

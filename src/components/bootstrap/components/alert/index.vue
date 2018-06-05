@@ -1,8 +1,7 @@
 <template>
   <div class="alert" :class="['alert-' + type, {'alert-dismissible': dismissible}]" role="alert" v-show="show">
-    <button v-if="dismissible" type="button" class="close" aria-label="Close" @click="closeHandler">
+    <button type="button" class="close" aria-label="Close" @click="closeHandler" v-if="dismissible">
       <span aria-hidden="true">&times;</span>
-      <span class="sr-only">Close</span>
     </button>
     <slot></slot>
   </div>

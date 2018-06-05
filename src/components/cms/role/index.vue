@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <div class="container my-3">
     Role Manager
-  </section>
+  </div>
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <div class="container my-3">
     Permission Manager
-  </section>
+  </div>
 </template>
 
 <script>

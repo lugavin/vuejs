@@ -8,6 +8,9 @@
 </template>
 
 <script>
+// Private Method
+const getValueInRange = (value, max, min = 0) => Math.max(Math.min(value, max), min);
+
 export const options = {
   /**
    * Maximal value to be displayed in the progressbar.
@@ -44,7 +47,7 @@ export default {
   props: options,
   computed: {
     val() {
-      return Math.min(this.value, this.max);
+      return getValueInRange(this.value, this.max);
     },
     percentVal() {
       return Number.parseFloat(((this.val / this.max) * 100).toFixed(2));
@@ -52,10 +55,10 @@ export default {
     progressbarClass() {
       const cls = {
         'progress-bar-striped': this.striped,
-        active: this.animated
+        'progress-bar-animated': this.animated
       };
       if (this.type) {
-        cls[`progress-bar-${this.type}`] = true;
+        cls[`bg-${this.type}`] = true;
       }
       return cls;
     }
