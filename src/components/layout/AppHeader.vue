@@ -2,9 +2,9 @@
   <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="#">Vue Template</a>
-      <a class="d-lg-none" href="javascript:void(0);" @click="isCollapsed = !isCollapsed">
+      <button class="navbar-toggler" type="button" @click="isCollapsed = !isCollapsed">
         <span class="navbar-toggler-icon"></span>
-      </a>
+      </button>
       <div class="collapse navbar-collapse" :class="{show: isCollapsed}">
         <ul class="navbar-nav ml-auto">
           <router-link class="nav-item" to="/home" tag="li">

@@ -3,7 +3,7 @@ import LoginService from './LoginService';
 
 const template = `
   <div :id="uid">
-    <div class="modal fade show" role="dialog" style="display: block;">
+    <div class="modal fade show d-block" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -20,9 +20,10 @@ const template = `
                   <div class="input-group-prepend">
                     <div class="input-group-text"><i class="fa fa-user"></i></div>
                   </div>
-                  <input id="username" name="username" type="text" class="form-control" placeholder="帐号"
-                         style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;"
-                         autofocus required pattern="^[a-zA-Z][a-zA-Z0-9_]{4,15}$" v-model.trim="loginVo.username">
+                  <!-- Fixed => https://github.com/twbs/bootstrap/issues/25110 -->
+                  <input id="username" name="username" type="text" class="form-control rounded-right"
+                         autofocus required pattern="^[a-zA-Z][a-zA-Z0-9_]{4,15}$" placeholder="帐号"
+                         v-model.trim="loginVo.username">
                   <div class="invalid-feedback">请输入正确的帐号</div>
                 </div>
               </div>
@@ -32,9 +33,9 @@ const template = `
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-lock"></i></span>
                   </div>
-                  <input id="password" name="password" type="password" class="form-control" placeholder="密码"
-                         style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;"
-                         required minlength="6" v-model.trim="loginVo.password">
+                  <input id="password" name="password" type="password" class="form-control rounded-right"
+                         required minlength="6" placeholder="密码"
+                         v-model.trim="loginVo.password">
                   <div class="invalid-feedback">请输入正确的密码</div>
                 </div>
               </div>

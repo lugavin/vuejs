@@ -28,10 +28,10 @@
                 <vb-alert>A simple primary alert</vb-alert>
               </p>
               <p>
-                <vb-progressbar :animated="true"
-                                :striped="true"
-                                :value="progressVal"
-                                :showValue="true"></vb-progressbar>
+                <vb-progressbar :striped="progress.striped"
+                                :animated="progress.animated"
+                                :showValue="progress.showValue"
+                                :value="progress.value"></vb-progressbar>
               </p>
             </div>
           </div>
@@ -79,8 +79,13 @@ export default {
         pageSize: 10,
         currPage: 1
       },
+      progress: {
+        striped: true,
+        animated: true,
+        showValue: true,
+        value: 0
+      },
       images: [],
-      progressVal: 0,
       collapsed: false
     };
   },
@@ -91,8 +96,17 @@ export default {
       { url: '/static/img/bg3.png' },
       { url: '/static/img/bg4.png' }
     );
-    setInterval(() => {
-      this.progressVal += 1;
+    const intervalId = setInterval(() => {
+      if (this.progress.value > 80) {
+        if (this.progress.value === 100) {
+          this.progress.animated = false;
+          clearInterval(intervalId);
+        } else {
+          this.progress.value += 1;
+        }
+      } else {
+        this.progress.value += Math.floor(Math.random() * 10);
+      }
     }, 1000);
   },
   methods: {
@@ -104,7 +118,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.row {
+.container > .row:not(:last-child) {
   margin-bottom: 1rem;
 }
 
