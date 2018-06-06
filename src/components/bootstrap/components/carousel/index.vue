@@ -22,18 +22,24 @@
 </template>
 
 <script>
-export const options = {
-  // The amount of time to delay between automatically cycling an item. If false, carousel will not automatically cycle.
-  interval: { type: Number, default: 5000 },
-  // Whether the carousel should cycle continuously or have hard stops.
-  wrap: { type: Boolean, default: true },
-  // Pauses the cycling of the carousel on mouseenter and resumes the cycling of the carousel on mouseleave.
-  hover: { type: Boolean, default: true },
-  indicators: { type: Boolean, default: true },
-  controls: { type: Boolean, default: true }
-};
 export default {
-  props: options,
+  props: {
+    /**
+     * The amount of time to delay between automatically cycling an item.
+     * If false, carousel will not automatically cycle.
+     */
+    interval: { type: Number, default: 5000 },
+    /**
+     * Whether the carousel should cycle continuously or have hard stops.
+     */
+    wrap: { type: Boolean, default: true },
+    /**
+     * Pauses the cycling of the carousel on mouseenter and resumes the cycling of the carousel on mouseleave.
+     */
+    hover: { type: Boolean, default: true },
+    indicators: { type: Boolean, default: true },
+    controls: { type: Boolean, default: true }
+  },
   data() {
     return {
       slideChangeInterval: null,

@@ -1,9 +1,9 @@
 import Collapse from './collapse';
-import Tooltip from './tooltip';
 import Popover from './popover';
+import Tooltip from './tooltip';
 
 export {
   Collapse,
-  Tooltip,
-  Popover
+  Popover,
+  Tooltip
 };

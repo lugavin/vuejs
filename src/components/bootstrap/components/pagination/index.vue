@@ -24,34 +24,33 @@
 </template>
 
 <script>
-export const options = {
-  // Whether to disable buttons from user input
-  disabled: { type: Boolean, default: false },
-  // Whether to show the "First" and "Last" page links
-  boundaryLinks: { type: Boolean, default: false },
-  // Whether to show the "Next" and "Previous" page links
-  directionLinks: { type: Boolean, default: true },
-  // Whether to show ellipsis symbols and first/last page numbers when maxSize > number of pages
-  ellipses: { type: Boolean, default: true },
-  // Whether to rotate pages when maxSize > number of pages. Current page will be in the middle
-  rotate: { type: Boolean, default: true },
-  // Pagination display size: small or large
-  size: { type: String },
-  // Maximum number of pages to display.
-  maxSize: { type: Number, default: 5 },
-  // Number of items in collection.
-  totalItems: { type: Number, required: true },
-  // Number of items per page.
-  pageSize: { type: Number, default: 10 },
-  // Current page. Page numbers start with 1
-  currPage: { type: Number, default: 1 }
-};
 /**
  * @see https://cn.vuejs.org/v2/guide/components-props.html
  * @see https://github.com/ng-bootstrap/ng-bootstrap/blob/master/src/pagination/pagination.ts
  */
 export default {
-  props: options,
+  props: {
+    // Whether to disable buttons from user input
+    disabled: { type: Boolean, default: false },
+    // Whether to show the "First" and "Last" page links
+    boundaryLinks: { type: Boolean, default: false },
+    // Whether to show the "Next" and "Previous" page links
+    directionLinks: { type: Boolean, default: true },
+    // Whether to show ellipsis symbols and first/last page numbers when maxSize > number of pages
+    ellipses: { type: Boolean, default: true },
+    // Whether to rotate pages when maxSize > number of pages. Current page will be in the middle
+    rotate: { type: Boolean, default: true },
+    // Pagination display size: small or large
+    size: { type: String },
+    // Maximum number of pages to display.
+    maxSize: { type: Number, default: 5 },
+    // Number of items in collection.
+    totalItems: { type: Number, required: true },
+    // Number of items per page.
+    pageSize: { type: Number, default: 10 },
+    // Current page. Page numbers start with 1
+    currPage: { type: Number, default: 1 }
+  },
   data() {
     return {
       pages: [],
