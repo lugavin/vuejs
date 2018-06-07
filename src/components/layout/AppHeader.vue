@@ -1,20 +1,20 @@
-<template>
+<template class="bounceInDown">
   <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">
-          <i class="fa fa-html5"></i> Vue Template
+          <i class="fa fa-html5"></i> VUI Bootstrap
         </a>
         <button class="navbar-toggler" type="button" @click="isCollapsed = !isCollapsed">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" :class="{show: isCollapsed}">
-          <ul class="navbar-nav ml-auto">
-            <router-link class="nav-item" to="/home" tag="li">
-              <a class="nav-link" href="javascript:void(0)">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/home">
                 <i class="fa fa-home"></i> 首页
-              </a>
-            </router-link>
+              </router-link>
+            </li>
             <li class="nav-item dropdown" v-for="menu of menus" :key="menu.id">
               <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
                 <i :class="menu.icon"></i> {{menu.name}}
@@ -56,6 +56,18 @@
                 <a class="dropdown-item" href="javascript:void(0)">繁体中文</a>
                 <a class="dropdown-item" href="javascript:void(0)">English</a>
               </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa fa-bell"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/lugavin/vuejs" class="nav-link" target="_blank">
+                <i class="fa fa-github fa-lg"></i>
+              </a>
             </li>
           </ul>
         </div>

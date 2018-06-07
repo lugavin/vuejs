@@ -82,7 +82,7 @@
               </div>
               <pre>
                 <code>
-                  <span class="editor-prefixed">npm install vue-uib --save</span>
+                  $ npm install vue-uib --save
                 </code>
               </pre>
             </div>
@@ -207,9 +207,5 @@ export default {
 .editor-window code span {
   font-family: Menlo, dejavu sans mono, lucida console, monospace;
   font-size: 14pt;
-}
-
-.editor-window .editor-prefixed:before {
-  content: "$ ";
 }
 </style>

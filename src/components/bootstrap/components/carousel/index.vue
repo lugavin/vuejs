@@ -81,7 +81,7 @@ export default {
       const selectedSlide = this.getSlideById(slideId);
       if (selectedSlide) {
         if (selectedSlide !== this.activeId) {
-          this.$emit('slideChange', { prev: this.activeId, current: selectedSlide, direction });
+          this.slideChange({ prev: this.activeId, current: selectedSlide, direction });
         }
         this.activeId = selectedSlide;
       }
@@ -160,6 +160,9 @@ export default {
      */
     cycle() {
       this.startTimer();
+    },
+    slideChange(data) {
+      this.$emit('slide', data);
     },
     keyboardEvent(event) {
       if (/input|textarea/i.test(event.target.tagName)) {
