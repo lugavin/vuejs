@@ -53,7 +53,7 @@
                       <td>{{ item.phone }}</td>
                       <td>
                         <span class="badge badge-success" v-if="item.activated">已激活</span>
-                        <span class="badge badge-secondary" v-if="!item.activated">未激活</span>
+                        <span class="badge badge-secondary" v-else>未激活</span>
                       </td>
                       <td>{{ item.createdBy }}</td>
                       <td>{{ item.createdDate }}</td>
@@ -67,7 +67,7 @@
               <div class="row datatable-footer" v-if="pagination.totalItems > -1">
                 <div class="col-sm-7">
                   <div class="datatable-pagination">
-                    <vb-pagination v-bind="pagination" @pageChange="pageChange"/>
+                    <uib-pagination v-bind="pagination" @pageChange="pageChange"></uib-pagination>
                   </div>
                 </div>
                 <div class="col-sm-5">

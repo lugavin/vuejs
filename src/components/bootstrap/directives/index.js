@@ -1,9 +1,9 @@
-import Collapse from './collapse';
-import Popover from './popover';
-import Tooltip from './tooltip';
+import UibCollapse from './collapse';
+import UibPopover from './popover';
+import UibTooltip from './tooltip';
 
 export {
-  Collapse,
-  Popover,
-  Tooltip
+  UibCollapse,
+  UibPopover,
+  UibTooltip
 };

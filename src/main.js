@@ -10,17 +10,13 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
  */
 import Vue from 'vue';
-import Vuelidate from 'vuelidate';
 
 import App from './App';
 import router from './router';
-import VBootstrap from './components/bootstrap';
+import UiBootstrap from './components/bootstrap';
 
-/**
- * @see https://router.vuejs.org/guide/advanced/navigation-guards.html#global-guards
- */
-// router.beforeEach((to, from, next) => {
-// });
+Vue.use(UiBootstrap);
+Vue.config.productionTip = false;
 
 /**
  * Create a simple global event bus to communicate between vue components
@@ -46,13 +42,6 @@ Object.defineProperties(Vue.prototype, { // Define instance method
   }
 });
 
-Vue.use(Vuelidate);
-Vue.use(VBootstrap);
-Vue.config.productionTip = false;
-
-/**
- * @see https://cn.vuejs.org/v2/api/#Vue-extend
- */
 new Vue({
   router,
   components: { App },

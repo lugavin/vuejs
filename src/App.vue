@@ -29,7 +29,6 @@ $fa-font-path: "~font-awesome/fonts/";
 @import "~bootstrap/scss/bootstrap";
 /*@import "~animate.css";*/
 /*@import 'nprogress/nprogress.css';*/
-
 html {
   position: relative;
   min-height: 100%;
@@ -54,6 +53,6 @@ body {
   width: 100%;
   height: 3.5rem;
   line-height: 3.5rem;
-  background-color: #f5f5f5;
+  background-color: #2d343a;
 }
 </style>

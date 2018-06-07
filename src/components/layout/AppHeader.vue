@@ -1,60 +1,64 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#">Vue Template</a>
-      <button class="navbar-toggler" type="button" @click="isCollapsed = !isCollapsed">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" :class="{show: isCollapsed}">
-        <ul class="navbar-nav ml-auto">
-          <router-link class="nav-item" to="/home" tag="li">
-            <a class="nav-link" href="javascript:void(0)">
-              <i class="fa fa-home"></i> 首页
-            </a>
-          </router-link>
-          <li class="nav-item dropdown" v-for="menu of menus" :key="menu.id">
-            <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
-              <i :class="menu.icon"></i> {{menu.name}}
-            </a>
-            <div class="dropdown-menu">
-              <router-link class="dropdown-item" :to="submenu.url" v-for="submenu of menu.children" :key="submenu.id">
-                <i :class="submenu.icon"></i> {{submenu.name}}
-              </router-link>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
-              <i class="fa fa-user"></i> 帐号
-            </a>
-            <div class="dropdown-menu">
-              <router-link class="dropdown-item" to="/settings" v-if="isAuthenticated">
-                <i class="fa fa-wrench"></i> 设置
-              </router-link>
-              <router-link class="dropdown-item" to="/password" v-if="isAuthenticated">
-                <i class="fa fa-lock"></i> 密码
-              </router-link>
-              <router-link class="dropdown-item" to="/register" v-if="!isAuthenticated">
-                <i class="fa fa-plus-circle"></i> 注册
-              </router-link>
-              <a class="dropdown-item" href="javascript:void(0)" @click="login" v-if="!isAuthenticated">
-                <i class="fa fa-sign-in"></i> 登录
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <i class="fa fa-html5"></i> Vue Template
+        </a>
+        <button class="navbar-toggler" type="button" @click="isCollapsed = !isCollapsed">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" :class="{show: isCollapsed}">
+          <ul class="navbar-nav ml-auto">
+            <router-link class="nav-item" to="/home" tag="li">
+              <a class="nav-link" href="javascript:void(0)">
+                <i class="fa fa-home"></i> 首页
               </a>
-              <a class="dropdown-item" href="javascript:void(0)" @click="logout" v-if="isAuthenticated">
-                <i class="fa fa-sign-out"></i> 退出
+            </router-link>
+            <li class="nav-item dropdown" v-for="menu of menus" :key="menu.id">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
+                <i :class="menu.icon"></i> {{menu.name}}
               </a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
-              <i class="fa fa-flag"></i> 语言
-            </a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="javascript:void(0)">简体中文</a>
-              <a class="dropdown-item" href="javascript:void(0)">繁体中文</a>
-              <a class="dropdown-item" href="javascript:void(0)">English</a>
-            </div>
-          </li>
-        </ul>
+              <div class="dropdown-menu">
+                <router-link class="dropdown-item" :to="submenu.url" v-for="submenu of menu.children" :key="submenu.id">
+                  <i :class="submenu.icon"></i> {{submenu.name}}
+                </router-link>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
+                <i class="fa fa-user"></i> 帐号
+              </a>
+              <div class="dropdown-menu">
+                <router-link class="dropdown-item" to="/settings" v-if="isAuthenticated">
+                  <i class="fa fa-wrench"></i> 设置
+                </router-link>
+                <router-link class="dropdown-item" to="/password" v-if="isAuthenticated">
+                  <i class="fa fa-lock"></i> 密码
+                </router-link>
+                <router-link class="dropdown-item" to="/register" v-if="!isAuthenticated">
+                  <i class="fa fa-plus-circle"></i> 注册
+                </router-link>
+                <a class="dropdown-item" href="javascript:void(0)" @click="login" v-if="!isAuthenticated">
+                  <i class="fa fa-sign-in"></i> 登录
+                </a>
+                <a class="dropdown-item" href="javascript:void(0)" @click="logout" v-if="isAuthenticated">
+                  <i class="fa fa-sign-out"></i> 退出
+                </a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button">
+                <i class="fa fa-flag"></i> 语言
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="javascript:void(0)">简体中文</a>
+                <a class="dropdown-item" href="javascript:void(0)">繁体中文</a>
+                <a class="dropdown-item" href="javascript:void(0)">English</a>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   </header>
@@ -62,9 +66,9 @@
 
 <script>
 import Dialog from '../shared/dialog';
-import LoginModal from '../sso/login/LoginModal';
-import LoginService from '../sso/login/LoginService';
-import PrincipalService from '../sso/auth/PrincipalService';
+import LoginModal from '../account/login/LoginModal';
+import LoginService from '../account/login/LoginService';
+import PrincipalService from '../account/auth/PrincipalService';
 
 const resolveMenus = (menus = []) => {
   const [idKey, pidKey, rootPid] = ['id', 'parentId', null];

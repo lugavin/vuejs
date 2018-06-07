@@ -1,13 +1,13 @@
-import VbPagination from './pagination';
-import VbAlert from './alert';
-import VbCarousel from './carousel';
-import VbCarouselSlide from './carousel/slide';
-import VbProgressbar from './progressbar';
+import UibPagination from './pagination';
+import UibAlert from './alert';
+import UibCarousel from './carousel';
+import UibCarouselSlide from './carousel/slide';
+import UibProgressbar from './progressbar';
 
 export {
-  VbPagination,
-  VbAlert,
-  VbCarousel,
-  VbCarouselSlide,
-  VbProgressbar
+  UibPagination,
+  UibAlert,
+  UibCarousel,
+  UibCarouselSlide,
+  UibProgressbar
 };

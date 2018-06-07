@@ -11,11 +11,19 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
+/**
+ * <pre>
+ *   router.beforeEach((to, from, next) => {
+ *   });
+ * </pre>
+ * @see https://router.vuejs.org/guide/advanced/navigation-guards.html#global-guards
+ */
 export default new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes: [
     { path: '/home', component: () => import('../components/home') },
+    { path: '/register', component: () => import('../components/account/register') },
     { path: '/', redirect: '/home' }
   ]
 });
