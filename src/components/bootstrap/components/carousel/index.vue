@@ -34,6 +34,10 @@ export default {
      */
     wrap: { type: Boolean, default: true },
     /**
+     * A flag for allowing navigation via keyboard
+     */
+    keyboard: { type: Boolean, default: true },
+    /**
      * Pauses the cycling of the carousel on mouseenter and resumes the cycling of the carousel on mouseleave.
      */
     hover: { type: Boolean, default: true },
@@ -53,16 +57,18 @@ export default {
       this.startTimer();
     }
     if (this.hover) {
-      this.$el.addEventListener('mouseenter', () => {
-        this.pause();
-      });
-      this.$el.addEventListener('mouseleave', () => {
-        this.next();
-      });
+      this.$el.addEventListener('mouseenter', this.pause);
+      this.$el.addEventListener('mouseleave', this.cycle);
+    }
+    if (this.keyboard) {
+      addEventListener('keydown', this.keyboardEvent);
     }
   },
   beforeDestroy() {
     clearInterval(this.slideChangeInterval);
+    if (this.keyboard) {
+      removeEventListener('keydown', this.keyboardEvent);
+    }
   },
   methods: {
     cycleToPrev() {
@@ -154,6 +160,23 @@ export default {
      */
     cycle() {
       this.startTimer();
+    },
+    keyboardEvent(event) {
+      if (/input|textarea/i.test(event.target.tagName)) {
+        return;
+      }
+      switch (event.which) {
+        case 37:
+          event.preventDefault();
+          this.prev();
+          break;
+        case 39:
+          event.preventDefault();
+          this.next();
+          break;
+        default:
+          break;
+      }
     }
   }
 };
