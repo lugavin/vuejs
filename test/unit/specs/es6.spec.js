@@ -16,3 +16,12 @@ test('object map', () => {
   });
   expect(obj).toEqual({ amount: 200 });
 });
+
+test('assert object type', () => {
+  expect(Object.prototype.toString.call(JSON.parse)).toEqual('[object Function]');
+  expect(Object.prototype.toString.call({})).toEqual('[object Object]');
+  expect(Object.prototype.toString.call([])).toEqual('[object Array]');
+  expect(Object.prototype.toString.call(new Date())).toEqual('[object Date]');
+  expect(Object.prototype.toString.call(JSON.parse('{ "key": "value" }'))).toEqual('[object Object]');
+  expect(Object.prototype.toString.call(JSON.stringify({ key: 'value' }))).toEqual('[object String]');
+});

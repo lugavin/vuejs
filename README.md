@@ -63,3 +63,7 @@ For a detailed explanation on how things work, check out the [guide](https://vue
 - [babelrc](https://babeljs.io/docs/usage/api/#options)
 - [postcssrc](https://github.com/michael-ciniawsky/postcss-load-config)
 - [prettierrc](http://json.schemastore.org/prettierrc)
+
+# Front-end Resources
+- [bootstrap-without-jquery](https://github.com/twbs/bootstrap/tree/v4-without-jquery)
+- [You Don't Need jQuery](https://github.com/nefe/You-Dont-Need-jQuery/blob/master/README.zh-CN.md)

@@ -56,8 +56,8 @@
           <div class="card border-success">
             <div class="card-body">
               <p>
-                <button type="button" class="btn btn-primary" title="tooltip"
-                        @click="collapsed=!collapsed">
+                <button type="button" class="btn btn-primary" title="Tooltip Message"
+                        v-uib-tooltip @click="collapsed=!collapsed">
                   Toggle
                 </button>
               </p>
@@ -141,6 +141,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.tooltip-inner {
+  background-color: #00cc00;
+}
+
+.tooltip.bs-tooltip-right .arrow:before {
+  border-right-color: #00cc00 !important;
+}
+
+.tooltip.bs-tooltip-left .arrow:before {
+  border-left-color: #00cc00 !important;
+}
+
+.tooltip.bs-tooltip-bottom .arrow:before {
+  border-bottom-color: #00cc00 !important;
+}
+
+.tooltip.bs-tooltip-top .arrow:before {
+  border-top-color: #00cc00 !important;
+}
+
 .container > .row:not(:last-child) {
   margin-bottom: 1rem;
 }

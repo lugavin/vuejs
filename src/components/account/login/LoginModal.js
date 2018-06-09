@@ -2,7 +2,7 @@ import Vue from 'vue';
 import LoginService from './LoginService';
 
 const template = `
-  <div :id="uid">
+  <div>
     <div class="modal fade show d-block" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -62,14 +62,6 @@ const template = `
     <div class="modal-backdrop fade show"></div>
   </div>
 `;
-// Private Method
-const genUID = (prefix) => {
-  do {
-    // eslint-disable-next-line no-param-reassign, no-bitwise
-    prefix += ~~(Math.random() * 1000000); // "~~" acts like a faster Math.floor() here
-  } while (document.getElementById(prefix));
-  return prefix;
-};
 
 /**
  * Create a subclass of the base Vue constructor. The argument should be an object containing component options.
@@ -84,7 +76,6 @@ const LoginModal = Vue.extend({
   template,
   data() {
     return {
-      uid: genUID('auth-dialog'),
       loginVo: {
         username: '',
         password: '',
@@ -106,8 +97,7 @@ const LoginModal = Vue.extend({
       form.classList.add('was-validated');
     },
     close() {
-      const $dialog = document.getElementById(this.uid);
-      $dialog.parentNode.removeChild($dialog);
+      this.$el.parentNode.removeChild(this.$el);
     }
   }
 });
