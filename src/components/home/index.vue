@@ -56,8 +56,12 @@
           <div class="card border-success">
             <div class="card-body">
               <p>
-                <button type="button" class="btn btn-primary" title="Tooltip Message"
-                        v-uib-tooltip @click="collapsed=!collapsed">
+                <button type="button" class="btn btn-primary"
+                        v-uib-popover="{
+                          title: 'Popover title',
+                          content: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus'
+                        }"
+                        @click="collapsed=!collapsed">
                   Toggle
                 </button>
               </p>
