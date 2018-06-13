@@ -8,11 +8,8 @@ export default {
   bind(el, binding, vnode) {
     el.classList.add('collapse');
     vnode.context.$watch(binding.expression, (value) => {
-      if (!value) {
-        el.classList.add('show');
-      } else {
-        el.classList.remove('show');
-      }
+      // eslint-disable-next-line no-unused-expressions
+      value ? el.classList.remove('show') : el.classList.add('show');
     }, { immediate: true });
   }
 };

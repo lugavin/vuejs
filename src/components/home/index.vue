@@ -65,9 +65,26 @@
                   Toggle
                 </button>
               </p>
-              <p class="card-text text-muted" v-uib-collapse="collapsed">
+              <p class="card-text text-muted collapse" v-uib-collapse="collapsed">
                 You can collapse this card by clicking Toggle
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card border-info">
+            <div class="card-body">
+              <uib-rating :rate="rating.currentRate" :resettable="true" @rateChange="rateChange">
+                <!--
+                <template slot-scope="{ context }">
+                  <span class="star" :class="{full: context.fill === 100}">
+                    <span class="half" :style="{width: context.fill+'%'}">&hearts;</span>&hearts;
+                  </span>
+                </template>
+                -->
+              </uib-rating>
             </div>
           </div>
         </div>
@@ -112,6 +129,9 @@ export default {
         showValue: true,
         value: 0
       },
+      rating: {
+        currentRate: 8
+      },
       images: [],
       collapsed: false
     };
@@ -139,6 +159,9 @@ export default {
   methods: {
     pageChange(page) {
       this.pagination.currPage = page;
+    },
+    rateChange(currentRate) {
+      this.rating.currentRate = currentRate;
     }
   }
 };
@@ -233,4 +256,24 @@ export default {
   font-family: Menlo, dejavu sans mono, lucida console, monospace;
   font-size: 14pt;
 }
+
+/*
+.star {
+  position: relative;
+  display: inline-block;
+  font-size: 3rem;
+  color: #d3d3d3;
+}
+
+.full {
+  color: red;
+}
+
+.half {
+  position: absolute;
+  display: inline-block;
+  overflow: hidden;
+  color: red;
+}
+*/
 </style>
