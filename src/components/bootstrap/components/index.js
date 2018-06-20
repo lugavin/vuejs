@@ -4,6 +4,7 @@ import UibCarouselSlide from './carousel/slide';
 import UibPagination from './pagination';
 import UibProgressbar from './progressbar';
 import UibRating from './rating';
+import UibTypeahead from './typeahead';
 
 export {
   UibAlert,
@@ -11,5 +12,6 @@ export {
   UibCarouselSlide,
   UibPagination,
   UibProgressbar,
-  UibRating
+  UibRating,
+  UibTypeahead
 };

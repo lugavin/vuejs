@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel-item" :class="{active: slideId === activeId}">
+  <div class="carousel-item" :class="{active: id === activeId}">
     <slot></slot>
   </div>
 </template>
@@ -8,29 +8,22 @@
 export default {
   data() {
     return {
-      slideId: ''
+      id: null
     };
   },
-  mounted() {
-    this.$parent.$children.forEach((child) => {
-      if (child === this) {
-        this.slideId = this.genUID('slide');
-        this.$parent.slideIds.push(this.slideId);
-      }
-    });
+  created() {
+    const genUID = (prefix) => {
+      do {
+        // eslint-disable-next-line no-param-reassign
+        prefix += Math.floor((Math.random() * 1000000));
+      } while (document.getElementById(prefix));
+      return prefix;
+    };
+    this.id = genUID('slide');
   },
   computed: {
     activeId() {
       return this.$parent.activeId;
-    }
-  },
-  methods: {
-    genUID(prefix) {
-      do {
-        // eslint-disable-next-line no-param-reassign, no-bitwise
-        prefix += ~~(Math.random() * 1000000); // "~~" acts like a faster Math.floor() here
-      } while (document.getElementById(prefix));
-      return prefix; // `${prefix}-${new Date().getTime()}-${Math.floor(Math.random() * 1000000)}`;
     }
   }
 };

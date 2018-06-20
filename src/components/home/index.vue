@@ -28,10 +28,7 @@
                 <uib-alert>A simple primary alert</uib-alert>
               </p>
               <p>
-                <uib-progressbar :striped="progress.striped"
-                                 :animated="progress.animated"
-                                 :showValue="progress.showValue"
-                                 :value="progress.value"></uib-progressbar>
+                <uib-progressbar v-bind="progress"></uib-progressbar>
               </p>
             </div>
           </div>
@@ -42,7 +39,9 @@
           <div class="card border-info">
             <div class="card-body">
               <div v-if="pagination.totalItems > -1">
-                <uib-pagination v-bind="pagination" @pageChange="pageChange"></uib-pagination>
+                <uib-pagination :pageSize="pagination.pageSize"
+                                :totalItems="pagination.totalItems"
+                                :currPage.sync="pagination.currPage"></uib-pagination>
                 <p class="card-text">
                   当前第 <strong>{{ pagination.currPage }}</strong> 页，
                   每页 <strong>{{ pagination.pageSize }}</strong> 条，
@@ -76,7 +75,7 @@
         <div class="col">
           <div class="card border-info">
             <div class="card-body">
-              <uib-rating :rate="rating.currentRate" :resettable="true" @rateChange="rateChange">
+              <uib-rating :rate.sync="rating.currentRate" :resettable="true">
                 <!--
                 <template slot-scope="{ context }">
                   <span class="star" :class="{full: context.fill === 100}">
@@ -155,14 +154,6 @@ export default {
         this.progress.value += Math.floor(Math.random() * 10);
       }
     }, 1000);
-  },
-  methods: {
-    pageChange(page) {
-      this.pagination.currPage = page;
-    },
-    rateChange(currentRate) {
-      this.rating.currentRate = currentRate;
-    }
   }
 };
 </script>

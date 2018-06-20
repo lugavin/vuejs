@@ -110,7 +110,7 @@ export default {
      * Event's payload equals to the newly selected rating.
      */
     rateChange(currentRate) {
-      this.$emit('rateChange', currentRate);
+      this.$emit('update:rate', currentRate);
     }
   }
 };

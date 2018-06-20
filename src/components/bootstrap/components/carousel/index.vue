@@ -2,19 +2,21 @@
   <div class="carousel slide">
     <!-- Indicators -->
     <ol class="carousel-indicators" v-if="indicators">
-      <li v-for="slideId of slideIds" :key="slideId" :class="{active: slideId === activeId}"
-          @click="cycleToSelected(slideId, getSlideEventDirection(activeId, slideId))"></li>
+      <li v-for="slide of slides" :key="slide.id" :class="{active: slide.id === activeId}"
+          @click="cycleToSelected(slide.id, getSlideEventDirection(activeId, slide.id))"></li>
     </ol>
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <slot></slot>
     </div>
     <!-- Controls -->
-    <a class="carousel-control-prev" role="button" @click="cycleToPrev" v-if="controls">
+    <a class="carousel-control-prev" href="javascript:void(0)" role="button"
+       @click="cycleToPrev" v-if="controls">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>
     </a>
-    <a class="carousel-control-next" role="button" @click="cycleToNext" v-if="controls">
+    <a class="carousel-control-next" href="javascript:void(0)" role="button"
+       @click="cycleToNext" v-if="controls">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="sr-only">Next</span>
     </a>
@@ -46,14 +48,15 @@ export default {
   },
   data() {
     return {
-      slideChangeInterval: null,
-      activeId: '',
-      slideIds: []
+      slides: [],
+      activeId: null,
+      slideChangeInterval: null
     };
   },
   mounted() {
-    if (this.slideIds.length) {
-      this.activeId = this.slideIds[0];
+    this.slides = this.$children.map(slide => ({ id: slide.id }));
+    if (this.slides.length) {
+      this.activeId = this.slides[0].id;
       this.startTimer();
     }
     if (this.hover) {
@@ -78,40 +81,40 @@ export default {
       this.cycleToSelected(this.getNextSlide(this.activeId), 'LEFT');
     },
     cycleToSelected(slideId, direction) {
-      const selectedSlide = this.getSlideById(slideId);
+      const selectedSlide = this.getSlide(slideId);
       if (selectedSlide) {
-        if (selectedSlide !== this.activeId) {
-          this.slideChange({ prev: this.activeId, current: selectedSlide, direction });
+        if (selectedSlide.id !== this.activeId) {
+          this.slideChange({ prev: this.activeId, current: selectedSlide.id, direction });
         }
-        this.activeId = selectedSlide;
+        this.activeId = selectedSlide.id;
       }
     },
-    getSlideById(slideId) {
-      const slideWithId = this.slideIds.filter(slide => slide === slideId);
+    getSlide(slideId) {
+      const slideWithId = this.slides.filter(slide => slide.id === slideId);
       return slideWithId.length ? slideWithId[0] : null;
     },
-    getSlideIdxById(slideId) {
-      return this.slideIds.indexOf(this.getSlideById(slideId));
+    getSlideIndex(slideId) {
+      return this.slides.indexOf(this.getSlide(slideId));
     },
     getPrevSlide(currentSlideId) {
-      const currentSlideIdx = this.getSlideIdxById(currentSlideId);
+      const currentSlideIdx = this.getSlideIndex(currentSlideId);
       const isFirstSlide = currentSlideIdx === 0;
       if (isFirstSlide) {
-        return this.wrap ? this.slideIds[this.slideIds.length - 1] : this.slideIds[0];
+        return this.wrap ? this.slides[this.slides.length - 1].id : this.slides[0].id;
       }
-      return this.slideIds[currentSlideIdx - 1];
+      return this.slides[currentSlideIdx - 1].id;
     },
     getNextSlide(currentSlideId) {
-      const currentSlideIdx = this.getSlideIdxById(currentSlideId);
-      const isLastSlide = currentSlideIdx === this.slideIds.length - 1;
+      const currentSlideIdx = this.getSlideIndex(currentSlideId);
+      const isLastSlide = currentSlideIdx === this.slides.length - 1;
       if (isLastSlide) {
-        return this.wrap ? this.slideIds[0] : this.slideIds[this.slideIds.length - 1];
+        return this.wrap ? this.slides[0].id : this.slides[this.slides.length - 1].id;
       }
-      return this.slideIds[currentSlideIdx + 1];
+      return this.slides[currentSlideIdx + 1].id;
     },
     getSlideEventDirection(currentActiveSlideId, nextActiveSlideId) {
-      const currentActiveSlideIdx = this.getSlideIdxById(currentActiveSlideId);
-      const nextActiveSlideIdx = this.getSlideIdxById(nextActiveSlideId);
+      const currentActiveSlideIdx = this.getSlideIndex(currentActiveSlideId);
+      const nextActiveSlideIdx = this.getSlideIndex(nextActiveSlideId);
       return currentActiveSlideIdx > nextActiveSlideIdx ? 'RIGHT' : 'LEFT';
     },
     /**

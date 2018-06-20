@@ -121,14 +121,15 @@ export default {
   },
   methods: {
     getUsers() {
+      const vm = this;
       UserService.getUsers({
-        param: this.queryVo,
-        page: this.pagination.currPage,
-        rows: this.pagination.pageSize
+        param: vm.queryVo,
+        page: vm.pagination.currPage,
+        rows: vm.pagination.pageSize
       }).then(resp => resp.body)
         .then((body) => {
-          this.users = body.items;
-          this.pagination.totalItems = body.totalItems;
+          vm.users = body.items;
+          vm.pagination.totalItems = body.totalItems;
         });
     },
     pageChange(page) {
