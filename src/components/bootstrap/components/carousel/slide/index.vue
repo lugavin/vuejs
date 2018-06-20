@@ -19,7 +19,7 @@ export default {
       } while (document.getElementById(prefix));
       return prefix;
     };
-    this.id = genUID('slide');
+    this.id = genUID('uib-slide');
   },
   computed: {
     activeId() {

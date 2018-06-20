@@ -4,6 +4,8 @@ import UibCarouselSlide from './carousel/slide';
 import UibPagination from './pagination';
 import UibProgressbar from './progressbar';
 import UibRating from './rating';
+import UibTabset from './tabset';
+import UibTab from './tabset/tab';
 import UibTypeahead from './typeahead';
 
 export {
@@ -13,5 +15,7 @@ export {
   UibPagination,
   UibProgressbar,
   UibRating,
+  UibTabset,
+  UibTab,
   UibTypeahead
 };
