@@ -54,18 +54,14 @@
         <div class="col">
           <div class="card border-success">
             <div class="card-body">
-              <p>
-                <button type="button" class="btn btn-primary"
-                        v-uib-popover="{
-                          title: 'Popover title',
-                          content: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus'
-                        }"
-                        @click="collapsed=!collapsed">
-                  Toggle
-                </button>
-              </p>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-info" v-uib-tooltip="tooltip">Tooltip</button>
+                <button type="button" class="btn btn-primary" v-uib-popover="popover">Popover</button>
+                <button type="button" class="btn btn-success" @click="collapsed=!collapsed">Collapse</button>
+                <button type="button" class="btn btn-secondary" @click="showModal=true">Modal</button>
+              </div>
               <p class="card-text text-muted collapse" v-uib-collapse="collapsed">
-                You can collapse this card by clicking Toggle
+                You can collapse this card by clicking Collapse
               </p>
             </div>
           </div>
@@ -86,6 +82,12 @@
               </uib-rating>
             </div>
           </div>
+        </div>
+        <div class="col">
+          <uib-tabset>
+            <uib-tab title="Home">This is the Home tab content.</uib-tab>
+            <uib-tab title="Profile">This is the Profile tab content.</uib-tab>
+          </uib-tabset>
         </div>
       </div>
     </div>
@@ -110,6 +112,21 @@
         </div>
       </div>
     </div>
+    <uib-modal v-if="showModal">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal Title</h5>
+        <button type="button" class="close" aria-label="Close" @click="showModal=false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="h5" role="alert">Modal Body</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" @click="showModal=false">Close</button>
+        <button type="button" class="btn btn-primary">OK</button>
+      </div>
+    </uib-modal>
   </section>
 </template>
 
@@ -131,8 +148,16 @@ export default {
       rating: {
         currentRate: 8
       },
+      tooltip: {
+        title: 'Tooltip on top'
+      },
+      popover: {
+        title: 'Popover title',
+        content: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus'
+      },
       images: [],
-      collapsed: false
+      collapsed: false,
+      showModal: false
     };
   },
   mounted() {

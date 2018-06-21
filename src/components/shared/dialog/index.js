@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 const template = `
-  <div :id="uid">
+  <div>
     <div class="modal fade show" role="dialog" style="display: block;">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -22,14 +22,6 @@ const template = `
   </div>
 `;
 
-const genUID = (prefix) => {
-  do {
-    /* eslint-disable no-param-reassign,no-bitwise */
-    prefix += ~~(Math.random() * 1000000); // "~~" acts like a faster Math.floor() here
-  } while (document.getElementById(prefix));
-  return prefix;
-};
-
 const TYPE = { ALERT: 'alert', CONFIRM: 'confirm' };
 
 function notify(msg, type, callback) {
@@ -39,8 +31,7 @@ function notify(msg, type, callback) {
       return {
         msg,
         type,
-        title: '提示消息',
-        uid: genUID('msg-dialog')
+        title: '提示消息'
       };
     },
     methods: {
@@ -55,8 +46,7 @@ function notify(msg, type, callback) {
         this.close();
       },
       close() {
-        const $dialog = document.getElementById(this.uid);
-        $dialog.parentNode.removeChild($dialog);
+        this.$el.parentNode.removeChild(this.$el);
       }
     }
   });

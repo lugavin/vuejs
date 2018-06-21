@@ -1,6 +1,7 @@
 import UibAlert from './alert';
 import UibCarousel from './carousel';
 import UibCarouselSlide from './carousel/slide';
+import UibModal from './modal';
 import UibPagination from './pagination';
 import UibProgressbar from './progressbar';
 import UibRating from './rating';
@@ -12,6 +13,7 @@ export {
   UibAlert,
   UibCarousel,
   UibCarouselSlide,
+  UibModal,
   UibPagination,
   UibProgressbar,
   UibRating,

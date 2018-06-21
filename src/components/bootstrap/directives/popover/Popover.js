@@ -130,13 +130,6 @@ export default class Popover {
 
   _events = [];
 
-  _genUID(prefix) {
-    do {
-      prefix += Math.floor((Math.random() * 1000000));
-    } while (document.getElementById(prefix));
-    return prefix;
-  }
-
   /**
    * Creates a new popper node
    * @private
@@ -147,7 +140,7 @@ export default class Popover {
     const popperGenerator = document.createElement('div');
     popperGenerator.innerHTML = template.trim();
     const popperNode = popperGenerator.childNodes[0];
-    popperNode.setAttribute('id', this._genUID('popper'));
+    popperNode.setAttribute('id', `popper_${Math.random().toString(36).substr(2, 10)}`);
     popperNode.setAttribute('aria-hidden', 'false');
     return popperNode;
   }
