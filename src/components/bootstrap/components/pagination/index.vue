@@ -189,7 +189,7 @@ export default {
      *  Page numbers start with 1
      */
     pageChange() {
-      this.$emit('update:currPage', this.page);
+      this.$emit('pageChange', this.page);
     }
   }
 };

@@ -24,6 +24,7 @@ const template = `
                   <input id="username" name="username" type="text" class="form-control rounded-right"
                          autofocus required pattern="^[a-zA-Z][a-zA-Z0-9_]{4,15}$" placeholder="帐号"
                          v-model.trim="loginVo.username">
+                   <!-- https://developer.mozilla.org/zh-CN/docs/Web/CSS/:invalid -->
                   <div class="invalid-feedback">请输入正确的帐号</div>
                 </div>
               </div>
