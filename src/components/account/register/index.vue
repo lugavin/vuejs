@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import RegisterService from './RegisterService';
+
 export default {
   data() {
     return {
@@ -85,7 +87,9 @@ export default {
       if (!form.checkValidity() || !this.confirmPassword) {
         event.stopPropagation();
       } else {
-        // TODO Register Account
+        RegisterService.registerAccount(this.registerVo).then(() => {
+          // TODO 提示"邮件已发送请注意查收"
+        });
       }
       form.classList.add('was-validated');
     }
