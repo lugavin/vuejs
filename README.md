@@ -67,3 +67,5 @@ For a detailed explanation on how things work, check out the [guide](https://vue
 # Front-end Resources
 - [bootstrap-without-jquery](https://github.com/twbs/bootstrap/tree/v4-without-jquery)
 - [You Don't Need jQuery](https://github.com/nefe/You-Dont-Need-jQuery/blob/master/README.zh-CN.md)
+- [nuxtjs](https://github.com/nuxt/nuxt.js)
+- [vuetifyjs](https://github.com/vuetifyjs/vuetify)
