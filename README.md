@@ -2,6 +2,8 @@
 
 > Vue Single Page Application
 
+![screen-capture](static/img/screen-capture.png)
+
 ## ECMAScript 6
 
 ### [Arrow Function](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)

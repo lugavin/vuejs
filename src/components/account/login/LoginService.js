@@ -16,7 +16,7 @@ const buildSearchParams = (params = {}) => {
 };
 
 const login = ({ username, password, rememberMe = true }) =>
-  Http.post('/rest/sso/account/login/1', buildSearchParams({ username, password }))
+  Http.post('/api/auth/account/login/1', buildSearchParams({ username, password }))
     .then((resp) => {
       const account = resp.body;
       PrincipalService.authenticate(account);
@@ -24,7 +24,7 @@ const login = ({ username, password, rememberMe = true }) =>
     });
 
 const logout = () =>
-  Http.get('/rest/sso/account/logout')
+  Http.get('/api/auth/account/logout')
     .then(() => PrincipalService.authenticate(null));
 
 export default {

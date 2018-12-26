@@ -11,7 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/rest': 'http://localhost' // https://webpack.js.org/configuration/dev-server/#devserver-proxy
+      '/api': 'http://localhost' // https://webpack.js.org/configuration/dev-server/#devserver-proxy
     },
 
     // Various Dev Server settings

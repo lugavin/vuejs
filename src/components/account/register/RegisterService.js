@@ -14,7 +14,7 @@ const buildSearchParams = (params = {}) => {
 };
 
 const registerAccount = ({ username, email, password }) =>
-  Http.post('/rest/sso/account/register', buildSearchParams({ username, email, password }));
+  Http.post('/api/auth/account/register', buildSearchParams({ username, email, password }));
 
 export default {
   registerAccount

@@ -12,7 +12,7 @@ export default new Router({
    *
    * @see https://developer.mozilla.org/zh-CN/docs/Web/API/History
    */
-  mode: 'history',
+  mode: 'hash',
   linkActiveClass: 'active',
   /**
    * <pre>

@@ -29,7 +29,7 @@ const identity = (force) => {
   if (userIdentity) {
     return Promise.resolve(userIdentity);
   }
-  return Http.get('/rest/sso/account').then((response) => {
+  return Http.get('/api/auth/account').then((response) => {
     const account = response.body;
     if (account) {
       userIdentity = account;
