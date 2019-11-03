@@ -42,8 +42,15 @@ Object.defineProperties(Vue.prototype, { // Define instance method
   }
 });
 
+/*
 new Vue({
-  router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  router
 }).$mount('#app');
+*/
+new Vue({
+  render: h => h(App),
+  router
+}).$mount('#app');
+
