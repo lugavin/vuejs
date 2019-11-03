@@ -15,7 +15,7 @@
   "dependencies": {
     "bootstrap": "^4.1.1",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "popper.js": "^1.14.3",
     "sockjs-client": "1.1.4",
     "tooltip.js": "^1.2.0",
