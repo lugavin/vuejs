@@ -15,7 +15,7 @@
 export default {};
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .page-wrapper {
   margin: 7% auto 0;
   max-width: 380px;

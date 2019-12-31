@@ -178,7 +178,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 @media (min-width: 768px) {
   .nav-item.dropdown:hover {
     display: block;

@@ -1,9 +1,9 @@
 <template>
   <section>
-    <uib-carousel v-if="images.length">
-      <uib-carousel-slide v-for="(img,idx) of images" :key="idx">
+    <uib-carousel>
+      <uib-carousel-slide v-for="(poster,idx) of posters" :key="idx">
         <!--<img class="img-fluid" src="https://placehold.it/1440x400">-->
-        <img class="d-block w-100" :src="img.url">
+        <img class="d-block w-100" :src="require(`@/assets/img/${poster.url}`)">
         <div class="carousel-caption d-none d-md-block">
           <h3>#{{ idx+1 }} slide label</h3>
           <p>This carousel uses customized default values.</p>
@@ -15,9 +15,8 @@
         <div class="col">
           <div class="card border-primary">
             <div class="card-body">
-              <p class="card-text">前端：Vue + Vue-Router + Bootstrap + Fetch + ES6 + Webpack</p>
-              <p class="card-text">后端：SpringCloud + SpringSession + Redis + Elasticsearch</p>
-              <p class="card-text">服务器：Nginx(Web服务器) + Tomcat(应用服务器)</p>
+              <p class="card-text">Front-end: Vue + Vuex + Vue-Router + ES6</p>
+              <p class="card-text">Back-end: Nest + TypeORM + TypeScript</p>
             </div>
           </div>
         </div>
@@ -132,41 +131,33 @@
 
 <script>
 export default {
-  data() {
-    return {
-      pagination: {
-        totalItems: 120,
-        pageSize: 10,
-        currPage: 1
-      },
-      progress: {
-        striped: true,
-        animated: true,
-        showValue: true,
-        value: 0
-      },
-      rating: {
-        currentRate: 8
-      },
-      tooltip: {
-        title: 'Tooltip on top'
-      },
-      popover: {
-        title: 'Popover title',
-        content: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus'
-      },
-      images: [],
-      collapsed: false,
-      showModal: false
-    };
-  },
+  data: () => ({
+    posters: require('@/data/posters.json'),
+    pagination: {
+      totalItems: 120,
+      pageSize: 10,
+      currPage: 1
+    },
+    progress: {
+      striped: true,
+      animated: true,
+      showValue: true,
+      value: 0
+    },
+    rating: {
+      currentRate: 8
+    },
+    tooltip: {
+      title: 'Tooltip on top'
+    },
+    popover: {
+      title: 'Popover title',
+      content: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus'
+    },
+    collapsed: false,
+    showModal: false
+  }),
   mounted() {
-    this.images.push(
-      { url: '/static/img/bg1.png' },
-      { url: '/static/img/bg2.png' },
-      { url: '/static/img/bg3.png' },
-      { url: '/static/img/bg4.png' }
-    );
     const intervalId = setInterval(() => {
       if (this.progress.value > 80) {
         if (this.progress.value === 100) {
@@ -183,7 +174,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 .tooltip-inner {
   background-color: #00cc00;

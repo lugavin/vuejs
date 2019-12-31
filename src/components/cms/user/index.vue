@@ -140,7 +140,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .card-table .card-body {
   padding: 0
 }

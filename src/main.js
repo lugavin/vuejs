@@ -1,21 +1,7 @@
-/**
- * The Vue build version to load with the `import` command
- * (runtime-only or standalone) has been set in webpack.base.conf with an alias.
- * <pre>
- * export default ...;
- * // => import defaultExport from 'module-name';
- * export { name1, name2 };
- * // => import { name1, name2 } from 'module-name';
- * </pre>
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
- */
-import Vue from 'vue';
+import Vue from 'vue'
+import App from './App'
+import {store, router, uib} from './plugins';
 
-import App from './App';
-import router from './router';
-import UiBootstrap from './components/bootstrap';
-
-Vue.use(UiBootstrap);
 Vue.config.productionTip = false;
 
 /**
@@ -42,15 +28,9 @@ Object.defineProperties(Vue.prototype, { // Define instance method
   }
 });
 
-/*
-new Vue({
-  components: { App },
-  template: '<App/>',
-  router
-}).$mount('#app');
-*/
 new Vue({
   render: h => h(App),
-  router
+  store,
+  router,
+  uib
 }).$mount('#app');
-
